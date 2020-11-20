@@ -1,0 +1,25 @@
+
+@import "./fontiran.scss";
+
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+//snack bar styles
+.snack-bar-custom {
+  font-family: "IRANSans";
+  display: none;
+}
+
+.fullscreen-enabled {
+  background: #eeeeee;
+}
+
+body,
+html {
+  // font-size: 62.5%;
+  // direction: rtl;
+}

@@ -1,0 +1,47 @@
+{
+  "name": "create-react-app",
+  "version": "4.0.0",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/pickers": "^3.2.10",
+    "axios": "^0.20.0",
+    "clsx": "latest",
+    "history": "^5.0.0",
+    "jss-rtl": "^0.3.0",
+    "jwt-decode": "^3.0.0",
+    "moment": "^2.29.0",
+    "moment-jalaali": "^0.9.2",
+    "node-sass": "^4.14.1",
+    "node-snackbar": "^0.1.16",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-full-screen": "^0.3.1",
+    "react-material-ui-form-validator": "^2.1.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "latest"
+  },
+  "devDependencies": {
+    "prettify": "^0.1.7"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
