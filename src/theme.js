@@ -17,10 +17,10 @@ let theme = createMuiTheme({
   },
   palette: {
     primary: {
-      main: '#556cd6',
+      main: '#54a7c8',
     },
     secondary: {
-      main: '#19857b',
+      main: '#376374',
     },
     error: {
       main: red.A400,

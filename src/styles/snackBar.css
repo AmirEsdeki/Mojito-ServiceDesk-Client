@@ -1,0 +1,14 @@
+.snack-bar-custom p {
+  font-family: "IRANSans";
+  font-size: 1rem !important;
+  opacity: 100% !important;
+}
+.snack-bar-custom button {
+  font-family: "IRANSans";
+  font-size: 1rem !important;
+  margin-right: 24px !important;
+  display: none;
+}
+.snack-bar-custom {
+  opacity: 70%;
+}
