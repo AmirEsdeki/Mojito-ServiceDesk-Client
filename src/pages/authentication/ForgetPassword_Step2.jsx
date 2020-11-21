@@ -12,8 +12,9 @@ import { ValidatorForm } from "react-material-ui-form-validator";
 import { TextValidator } from "react-material-ui-form-validator";
 import auth from "../../api/auth/auth";
 import { useDispatch } from "../../context/store";
-import withWidth from "@material-ui/core/withWidth";
 import { useHistory } from "react-router-dom";
+import { storeToken } from "../../helpers/token";
+import jwt_decode from "jwt-decode";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(8),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -60,33 +61,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SignUp(props) {
+function ForgetPassword_Step2(props) {
   /* -------------------------------- variables ------------------------------- */
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
+  const userId = history.location.state?.userId;
   /* -------------------------------------------------------------------------- */
 
   /* ---------------------------------- refs ---------------------------------- */
-  const userNameRef = React.createRef();
-  const firstNameRef = React.createRef();
-  const lastNameRef = React.createRef();
-  const emailRef = React.createRef();
-  const phoneNumberRef = React.createRef();
+  const codeRef = React.createRef();
   const passwordRef = React.createRef();
   const confirmPasswordRef = React.createRef();
   /* -------------------------------------------------------------------------- */
 
   /* --------------------------------- states --------------------------------- */
   const [model, setModel] = React.useState({
-    userName: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
+    code: "",
+    userId: userId ? userId : "",
     password: "",
     confirmPassword: "",
-    customerOrganizationId: 1,
   });
   /* -------------------------------------------------------------------------- */
 
@@ -94,16 +88,8 @@ function SignUp(props) {
   const handleChange = (e) => {
     const value = e.target.value;
     const name = e.target.name;
-    if (name === "username") {
-      setModel({ ...model, userName: value });
-    } else if (name === "firstName") {
-      setModel({ ...model, firstName: value });
-    } else if (name === "lastName") {
-      setModel({ ...model, lastName: value });
-    } else if (name === "email") {
-      setModel({ ...model, email: value });
-    } else if (name === "phoneNumber") {
-      setModel({ ...model, phoneNumber: value });
+    if (name === "code") {
+      setModel({ ...model, code: value });
     } else if (name === "password") {
       setModel({ ...model, password: value });
     } else if (name === "confirmPassword") {
@@ -111,13 +97,14 @@ function SignUp(props) {
     }
   };
 
-  const signUpClickHandler = (e) => {
+  const changePasswordClickHandler = (e) => {
     (async function () {
-      const res = await auth.signUp(model);
-      if (res.result && res.result.id) {
-        history.push("/verify-user", {
-          userId: res.result.id,
-        });
+      const res = await auth.changePassword(model);
+      if (res.result && res.result.token) {
+        const token = res.result.token;
+        const decodedToken = jwt_decode(token);
+        storeToken(res.result.token, false);
+        dispatch({ type: "LOGIN_STATUS", payload: true });
       }
     })();
   };
@@ -147,83 +134,24 @@ function SignUp(props) {
           <Typography component="h1" variant="h5">
             <strong>پورتال جامع فرانام</strong>
           </Typography>
-          <ValidatorForm onSubmit={signUpClickHandler} className={classes.form}>
+          <ValidatorForm
+            onSubmit={changePasswordClickHandler}
+            className={classes.form}
+          >
             <TextValidator
               variant="outlined"
               margin="normal"
               fullWidth
               autoFocus
-              id="username"
-              label="نام کاربری"
-              name="username"
+              id="code"
+              label="کد دریافتی"
+              name="code"
               validators={["required"]}
               errorMessages={["این فیلد اجباری است"]}
               autoComplete="off"
               onChange={handleChange}
-              ref={userNameRef}
-              value={model.userName}
-            />
-            <Grid container spacing={"xs" === props.width ? 0 : 3}>
-              <Grid item xs={12} sm={6} md={6}>
-                <TextValidator
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  id="firstName"
-                  label="نام"
-                  name="firstName"
-                  validators={["required"]}
-                  errorMessages={["این فیلد اجباری است"]}
-                  autoComplete="off"
-                  onChange={handleChange}
-                  ref={firstNameRef}
-                  value={model.firstName}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={6}>
-                <TextValidator
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  id="lastName"
-                  label="نام خانوادگی"
-                  name="lastName"
-                  validators={["required"]}
-                  errorMessages={["این فیلد اجباری است"]}
-                  autoComplete="off"
-                  onChange={handleChange}
-                  ref={lastNameRef}
-                  value={model.lastName}
-                />
-              </Grid>
-            </Grid>
-            <TextValidator
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              id="email"
-              label="پست الکترونیکی"
-              name="email"
-              validators={["required"]}
-              errorMessages={["این فیلد اجباری است"]}
-              autoComplete="off"
-              onChange={handleChange}
-              ref={emailRef}
-              value={model.email}
-            />
-            <TextValidator
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              id="phoneNumber"
-              label="شماره موبایل"
-              name="phoneNumber"
-              validators={["required"]}
-              errorMessages={["این فیلد اجباری است"]}
-              autoComplete="off"
-              onChange={handleChange}
-              ref={phoneNumberRef}
-              value={model.phoneNumber}
+              ref={codeRef}
+              value={model.code}
             />
             <Grid container spacing={"xs" === props.width ? 0 : 3}>
               <Grid item xs={12} sm={6} md={6}>
@@ -268,17 +196,12 @@ function SignUp(props) {
               color="secondary"
               className={classes.submit}
             >
-              ثبت نام در پورتال
+              اعتبارسنجی کد
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/verify-user-with-identity" variant="body2">
-                  {"ورود کد اعتبارسنجی قبلی"}
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signin" variant="body2">
-                  {"بازگشت به صفحه ورود"}
+                <Link href="/forget-password-step1" variant="body2">
+                  {"ارسال مجدد کد"}
                 </Link>
               </Grid>
             </Grid>
@@ -288,4 +211,4 @@ function SignUp(props) {
     </Grid>
   );
 }
-export default withWidth()(SignUp);
+export default ForgetPassword_Step2;

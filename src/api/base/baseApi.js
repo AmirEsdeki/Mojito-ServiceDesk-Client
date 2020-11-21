@@ -54,11 +54,43 @@ class BaseAPI {
         if (error.response && error.response.data) {
           console.log("err in baseAPI", error.response.data);
           if (raiseError)
-            showNotify({
-              text:
-                error.response.data.responseException.exceptionMessage ||
-                "خطایی در عملیات پیش آمده است، لطفا دوباره تلاش کنید",
-            });
+            if (
+              error.response.data.responseException.exceptionMessage &&
+              error.response.data.responseException.exceptionMessage.errors
+            ) {
+              //errors in viewModelValidation use the below format.
+              let errors =
+                error.response.data.responseException.exceptionMessage.errors;
+              for (const key in errors) {
+                if (errors.hasOwnProperty(key)) {
+                  const element = errors[key];
+                  showNotify({
+                    text: element[0],
+                  });
+                }
+              }
+            } else if (
+              error.response.data.responseException &&
+              Array.isArray(error.response.data.responseException)
+            ) {
+              let errors = error.response.data.responseException;
+              let errorMessage = "";
+              errors.forEach((element) => {
+                errorMessage += element.description + "<br>" + "<br>";
+              });
+              showNotify({
+                text: errorMessage,
+                duration: 8000,
+              });
+            } else {
+              //general errors is handled as below
+              showNotify({
+                text:
+                  error.response.data.responseException.exceptionMessage ||
+                  "خطایی در عملیات پیش آمده است، لطفا دوباره تلاش کنید",
+              });
+            }
+
           let errorBody = error.response.data;
           return errorBody;
         }

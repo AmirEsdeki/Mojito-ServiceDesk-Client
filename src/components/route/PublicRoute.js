@@ -6,8 +6,6 @@ const PublicRoute = ({ component: Component, props, ...rest }) => {
   const state = useStore();
   const isLoggedIn = state.isLoggedIn;
 
-  console.log("isLoggedIn", isLoggedIn);
-
   return (
     <Route
       {...rest}

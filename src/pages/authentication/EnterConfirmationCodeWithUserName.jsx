@@ -2,11 +2,8 @@ import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -14,22 +11,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { TextValidator } from "react-material-ui-form-validator";
 import auth from "../../api/auth/auth";
+import { useDispatch } from "../../context/store";
 import { storeToken } from "../../helpers/token";
 import jwt_decode from "jwt-decode";
-import { useDispatch } from "../../context/store";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"تمام حقوق برای شرکت"}{" "}
-      <Link color="inherit" href="http://faranam.net/">
-        فرانام
-      </Link>{" "}
-      {"محفوظ است"} {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(8),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -76,46 +61,43 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+function EnterConfirmationCodeWithUserName(props) {
   /* -------------------------------- variables ------------------------------- */
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
   /* -------------------------------------------------------------------------- */
 
   /* ---------------------------------- refs ---------------------------------- */
-  const userNameRef = React.createRef();
-  const passwordRef = React.createRef();
+  const codeRef = React.createRef();
+  const identityRef = React.createRef();
   /* -------------------------------------------------------------------------- */
 
   /* --------------------------------- states --------------------------------- */
-  const [userName, setUserName] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [rememberMe, setRememberMe] = React.useState();
+  const [model, setModel] = React.useState({
+    code: "",
+    identity: null,
+  });
   /* -------------------------------------------------------------------------- */
 
   /* -------------------------------- functions ------------------------------- */
   const handleChange = (e) => {
     const value = e.target.value;
     const name = e.target.name;
-    if (name === "username") {
-      setUserName(value);
-    } else if (name === "password") {
-      setPassword(value);
-    } else if (name === "checkbox") {
-      setRememberMe(e.target.checked);
+    if (name === "code") {
+      setModel({ ...model, code: value });
+    } else if (name === "identity") {
+      setModel({ ...model, identity: value });
     }
   };
 
-  const loginClickHandler = (e) => {
+  const confirmationClickHandler = (e) => {
     (async function () {
-      const res = await auth.signIn({
-        username: userName,
-        password: password,
-      });
+      const res = await auth.confirmCode(model);
       if (res.result && res.result.token) {
         const token = res.result.token;
         const decodedToken = jwt_decode(token);
-        storeToken(res.result.token, rememberMe);
+        storeToken(res.result.token, false);
         dispatch({ type: "LOGIN_STATUS", payload: true });
       }
     })();
@@ -146,79 +128,74 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             <strong>پورتال جامع فرانام</strong>
           </Typography>
-          <br />
-          <br />
-          <br />
-          <ValidatorForm onSubmit={loginClickHandler} className={classes.form}>
+          <ValidatorForm
+            onSubmit={confirmationClickHandler}
+            className={classes.form}
+          >
+            <Typography component="h1" variant="h6">
+              یکی از مشخصات حساب کاربری و کد ارسال شده را وارد نمایید.
+            </Typography>
+            <br />
+
             <TextValidator
               variant="outlined"
               margin="normal"
               fullWidth
-              id="username"
-              label="نام کاربری، آدرس ایمیل یا شماره موبایل"
-              name="username"
-              autoComplete="username"
               autoFocus
+              id="identity"
+              label="نام کاربری، آدرس ایمیل یا شماره موبایل"
+              name="identity"
               validators={["required"]}
               errorMessages={["این فیلد اجباری است"]}
               autoComplete="off"
               onChange={handleChange}
-              ref={userNameRef}
-              value={userName}
+              ref={identityRef}
+              value={model.identity}
             />
             <TextValidator
               variant="outlined"
               margin="normal"
               fullWidth
-              name="password"
-              label="رمز عبور"
-              type="password"
-              id="password"
+              id="code"
+              label="کد دریافتی"
+              name="code"
               validators={["required"]}
               errorMessages={["این فیلد اجباری است"]}
-              autoComplete="current-password"
+              autoComplete="off"
               onChange={handleChange}
-              ref={passwordRef}
-              value={password}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="checkbox"
-                  value={rememberMe}
-                  onChange={handleChange}
-                  color="primary"
-                />
-              }
-              label="مرا به خاطر بسپار"
+              ref={codeRef}
+              value={model.code}
+              style={{ textAlign: "center" }}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.submit}
             >
-              ورود به پورتال
+              اعتبارسنجی کد
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/forget-password-step1" variant="body2">
-                  رمز عبور خود را فراموش کرده اید؟
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="/signup" variant="body2">
-                  {"ثبت نام"}
+                <Link
+                  href="/signin"
+                  variant="body2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    history.push("/forget-password-step1", {
+                      nextIsConfirmCode: true,
+                    });
+                  }}
+                >
+                  {"ارسال مجدد کد اعتبارسنجی"}
                 </Link>
               </Grid>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
           </ValidatorForm>
         </div>
       </Grid>
     </Grid>
   );
 }
+export default EnterConfirmationCodeWithUserName;

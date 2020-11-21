@@ -13,6 +13,26 @@ class AuthServiceProvider extends BaseAPI {
   signIn(data) {
     return this.httpService.post("signin", data);
   }
+
+  signUp(data) {
+    return this.httpService.post("register", data);
+  }
+
+  verifyUser(data) {
+    return this.httpService.post("verify-user", data);
+  }
+
+  confirmCode(data) {
+    return this.httpService.post("confirm-code", data);
+  }
+
+  resendCode(data) {
+    return this.httpService.post("resend-code", data);
+  }
+
+  changePassword(data) {
+    return this.httpService.post("change-password", data);
+  }
 }
 
 const AuthService = new AuthServiceProvider();

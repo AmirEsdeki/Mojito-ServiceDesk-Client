@@ -2,11 +2,8 @@ import React from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
@@ -14,22 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { TextValidator } from "react-material-ui-form-validator";
 import auth from "../../api/auth/auth";
-import { storeToken } from "../../helpers/token";
-import jwt_decode from "jwt-decode";
 import { useDispatch } from "../../context/store";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"تمام حقوق برای شرکت"}{" "}
-      <Link color="inherit" href="http://faranam.net/">
-        فرانام
-      </Link>{" "}
-      {"محفوظ است"} {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(8),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -76,47 +59,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+function ForgetPassword_Step1(props) {
   /* -------------------------------- variables ------------------------------- */
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const nextIsConfirmCode = history.location.state?.nextIsConfirmCode;
   /* -------------------------------------------------------------------------- */
 
   /* ---------------------------------- refs ---------------------------------- */
-  const userNameRef = React.createRef();
-  const passwordRef = React.createRef();
+  const identityRef = React.createRef();
   /* -------------------------------------------------------------------------- */
 
   /* --------------------------------- states --------------------------------- */
-  const [userName, setUserName] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [rememberMe, setRememberMe] = React.useState();
+  const [model, setModel] = React.useState({
+    identity: null,
+  });
   /* -------------------------------------------------------------------------- */
 
   /* -------------------------------- functions ------------------------------- */
   const handleChange = (e) => {
     const value = e.target.value;
     const name = e.target.name;
-    if (name === "username") {
-      setUserName(value);
-    } else if (name === "password") {
-      setPassword(value);
-    } else if (name === "checkbox") {
-      setRememberMe(e.target.checked);
+    if (name === "identity") {
+      setModel({ ...model, identity: value });
     }
   };
 
-  const loginClickHandler = (e) => {
+  const confirmationClickHandler = (e) => {
     (async function () {
-      const res = await auth.signIn({
-        username: userName,
-        password: password,
-      });
-      if (res.result && res.result.token) {
-        const token = res.result.token;
-        const decodedToken = jwt_decode(token);
-        storeToken(res.result.token, rememberMe);
-        dispatch({ type: "LOGIN_STATUS", payload: true });
+      const res = await auth.resendCode(model);
+      if (res.result && res.result.id) {
+        if (nextIsConfirmCode) {
+          history.push("/verify-user", {
+            userId: res.result.id,
+          });
+        } else {
+          history.push("/forget-password-step2", {
+            userId: res.result.id,
+          });
+        }
       }
     })();
   };
@@ -146,65 +128,44 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             <strong>پورتال جامع فرانام</strong>
           </Typography>
-          <br />
-          <br />
-          <br />
-          <ValidatorForm onSubmit={loginClickHandler} className={classes.form}>
+          <ValidatorForm
+            onSubmit={confirmationClickHandler}
+            className={classes.form}
+          >
+            <Typography component="h1" variant="h6">
+              مرحله اول: ارسال کد اعتبارسنجی
+            </Typography>
+            <br />
+
             <TextValidator
               variant="outlined"
               margin="normal"
               fullWidth
-              id="username"
-              label="نام کاربری، آدرس ایمیل یا شماره موبایل"
-              name="username"
-              autoComplete="username"
               autoFocus
+              id="identity"
+              label="نام کاربری، آدرس ایمیل یا شماره موبایل"
+              name="identity"
               validators={["required"]}
               errorMessages={["این فیلد اجباری است"]}
               autoComplete="off"
               onChange={handleChange}
-              ref={userNameRef}
-              value={userName}
+              ref={identityRef}
+              value={model.identity}
             />
-            <TextValidator
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              name="password"
-              label="رمز عبور"
-              type="password"
-              id="password"
-              validators={["required"]}
-              errorMessages={["این فیلد اجباری است"]}
-              autoComplete="current-password"
-              onChange={handleChange}
-              ref={passwordRef}
-              value={password}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="checkbox"
-                  value={rememberMe}
-                  onChange={handleChange}
-                  color="primary"
-                />
-              }
-              label="مرا به خاطر بسپار"
-            />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.submit}
             >
-              ورود به پورتال
+              ارسال کد و مرحله بعد
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/forget-password-step1" variant="body2">
-                  رمز عبور خود را فراموش کرده اید؟
+                <Link href="/signin" variant="body2">
+                  {"بازگشت به صفحه ورود"}
                 </Link>
               </Grid>
               <Grid item>
@@ -213,12 +174,10 @@ export default function SignInSide() {
                 </Link>
               </Grid>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
           </ValidatorForm>
         </div>
       </Grid>
     </Grid>
   );
 }
+export default ForgetPassword_Step1;
