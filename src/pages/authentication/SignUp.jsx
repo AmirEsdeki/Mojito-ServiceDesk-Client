@@ -16,19 +16,7 @@ import { TextValidator } from "react-material-ui-form-validator";
 import auth from "../../api/auth/auth";
 import { storeToken } from "../../helpers/token";
 import jwt_decode from "jwt-decode";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"تمام حقوق برای شرکت"}{" "}
-      <Link color="inherit" href="http://faranam.net/">
-        فرانام
-      </Link>{" "}
-      {"محفوظ است"} {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { useDispatch } from "../../context/store";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,20 +63,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignInSide() {
+export default function SignUp() {
   /* -------------------------------- variables ------------------------------- */
   const classes = useStyles();
+  const dispatch = useDispatch();
   /* -------------------------------------------------------------------------- */
 
   /* ---------------------------------- refs ---------------------------------- */
   const userNameRef = React.createRef();
+  const firstNameRef = React.createRef();
+  const lastNameRef = React.createRef();
+  const emailRef = React.createRef();
+  const phoneNumberRef = React.createRef();
   const passwordRef = React.createRef();
+  const confirmPasswordRef = React.createRef();
   /* -------------------------------------------------------------------------- */
 
   /* --------------------------------- states --------------------------------- */
-  const [userName, setUserName] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [rememberMe, setRememberMe] = React.useState();
+  const [model, setModel] = React.useState({
+    userName: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
+  });
   /* -------------------------------------------------------------------------- */
 
   /* -------------------------------- functions ------------------------------- */
@@ -104,7 +104,7 @@ export default function SignInSide() {
     }
   };
 
-  const loginClickHandler = (e) => {
+  const signUpClickHandler = (e) => {
     (async function () {
       const res = await auth.signIn({
         username: userName,
@@ -114,6 +114,7 @@ export default function SignInSide() {
         const token = res.result.token;
         const decodedToken = jwt_decode(token);
         storeToken(res.result.token, rememberMe);
+        dispatch({ type: "LOGIN_STATUS", payload: true });
       }
     })();
   };
@@ -143,76 +144,141 @@ export default function SignInSide() {
           <Typography component="h1" variant="h5">
             <strong>پورتال جامع فرانام</strong>
           </Typography>
-          <br />
-          <br />
-          <br />
-          <ValidatorForm onSubmit={loginClickHandler} className={classes.form}>
+          <ValidatorForm onSubmit={signUpClickHandler} className={classes.form}>
             <TextValidator
               variant="outlined"
               margin="normal"
               fullWidth
+              autoFocus
               id="username"
               label="نام کاربری"
               name="username"
-              autoComplete="username"
-              autoFocus
               validators={["required"]}
               errorMessages={["این فیلد اجباری است"]}
               autoComplete="off"
               onChange={handleChange}
               ref={userNameRef}
-              value={userName}
+              value={model.userName}
+            />
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <TextValidator
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  id="firstName"
+                  label="نام"
+                  name="firstName"
+                  validators={["required"]}
+                  errorMessages={["این فیلد اجباری است"]}
+                  autoComplete="off"
+                  onChange={handleChange}
+                  ref={firstNameRef}
+                  value={model.firstName}
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextValidator
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  id="lastName"
+                  label="نام خانوادگی"
+                  name="lastName"
+                  validators={["required"]}
+                  errorMessages={["این فیلد اجباری است"]}
+                  autoComplete="off"
+                  onChange={handleChange}
+                  ref={lastNameRef}
+                  value={model.lastName}
+                />
+              </Grid>
+            </Grid>
+            <TextValidator
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              id="email"
+              label="پست الکترونیکی"
+              name="email"
+              validators={["required"]}
+              errorMessages={["این فیلد اجباری است"]}
+              autoComplete="off"
+              onChange={handleChange}
+              ref={emailRef}
+              value={model.email}
             />
             <TextValidator
               variant="outlined"
               margin="normal"
               fullWidth
-              name="password"
-              label="رمز عبور"
-              type="password"
-              id="password"
+              id="phoneNumber"
+              label="شماره موبایل"
+              name="phoneNumber"
               validators={["required"]}
               errorMessages={["این فیلد اجباری است"]}
-              autoComplete="current-password"
+              autoComplete="off"
               onChange={handleChange}
-              ref={passwordRef}
-              value={password}
+              ref={phoneNumberRef}
+              value={model.phoneNumber}
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="checkbox"
-                  value={rememberMe}
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <TextValidator
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  name="password"
+                  label="رمز عبور"
+                  type="password"
+                  id="password"
+                  validators={["required"]}
+                  errorMessages={["این فیلد اجباری است"]}
+                  autoComplete="off"
                   onChange={handleChange}
-                  color="primary"
+                  ref={passwordRef}
+                  value={model.password}
                 />
-              }
-              label="مرا به خاطر بسپار"
-            />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextValidator
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                  name="confirmPassword"
+                  label="تکرار رمز عبور"
+                  type="confirmPassword"
+                  id="confirmPassword"
+                  validators={["required"]}
+                  errorMessages={["این فیلد اجباری است"]}
+                  autoComplete="off"
+                  onChange={handleChange}
+                  ref={confirmPasswordRef}
+                  value={model.confirmPassword}
+                />
+              </Grid>
+            </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.submit}
             >
-              ورود به پورتال
+              ثبت نام در پورتال
             </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
-                  رمز عبور خود را فراموش کرده اید؟
+                  ورود رمز اعتبارسنجی
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"ثبت نام"}
+                <Link href="/signin" variant="body2">
+                  {"ورود"}
                 </Link>
               </Grid>
             </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
           </ValidatorForm>
         </div>
       </Grid>
