@@ -12,21 +12,24 @@ import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import {
-  mainListItems,
+  MainListItems,
   secondaryListItems,
+  tertiaryListItems,
 } from "./dashboardElements/listItems";
-import Chart from "./dashboardElements/Chart";
-import Deposits from "./dashboardElements/Deposits";
-import Orders from "./dashboardElements/Orders";
+
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { removeToken } from "./../../helpers/token";
+import { useDispatch } from "../../context/store";
+import SampleReport from "../sampleReportPage/SampleReport";
+import PrivateRoute from "../../components/route/PrivateRoute";
+import NewTicket from "../newTicket/NewTicket";
 
 function Copyright() {
   return (
@@ -41,7 +44,7 @@ function Copyright() {
   );
 }
 
-const drawerWidth = 215;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,6 +85,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   drawerPaper: {
+    overflowY: "auto",
+    height: "100%",
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -125,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
 export default function DashboardStructure() {
   /* ---------------------------- general variables --------------------------- */
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const dispatch = useDispatch();
   /* -------------------------------------------------------------------------- */
 
   /* --------------------- opening and closing the drawer --------------------- */
@@ -178,7 +183,13 @@ export default function DashboardStructure() {
             <FullscreenIcon />
           </IconButton>
 
-          <IconButton color="inherit">
+          <IconButton
+            color="inherit"
+            onClick={() => {
+              removeToken();
+              dispatch({ type: "LOGIN_STATUS", payload: false });
+            }}
+          >
             <ExitToAppIcon />
           </IconButton>
         </Toolbar>
@@ -192,37 +203,24 @@ export default function DashboardStructure() {
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
+            <ChevronRightIcon />
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <MainListItems />
         <Divider />
         <List>{secondaryListItems}</List>
+        <Divider />
+        <List>{tertiaryListItems}</List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
-            </Grid>
-          </Grid>
+          <PrivateRoute
+            path="/dashboard/ticket-report"
+            component={SampleReport}
+          />
+          <PrivateRoute path="/dashboard/new-ticket" component={NewTicket} />
           <Box pt={4}>
             <Copyright />
           </Box>

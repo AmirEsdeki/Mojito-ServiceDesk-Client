@@ -35,7 +35,7 @@ export default function App() {
             component={EnterConfirmationCodeWithUserName}
           />
           <PrivateRoute path="/dashboard" component={Dashboard} />
-          <Redirect from="/" to="/signin"></Redirect>
+          {/* <Redirect from="/" to="/signin"></Redirect> */}
         </Switch>
       </DispatchContext.Provider>
     </StateContext.Provider>
