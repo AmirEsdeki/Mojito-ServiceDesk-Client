@@ -1,6 +1,7 @@
 import React from "react";
 import SignIn from "./pages/authentication/SignIn";
 import PublicRoute from "./components/route/PublicRoute";
+import PrivateRoute from "./components/route/PrivateRoute";
 import mainReducer from "./context/reducers/mainReducer";
 import { initialState, StateContext, DispatchContext } from "./context/store";
 import { Switch, Redirect } from "react-router-dom";
@@ -9,6 +10,7 @@ import EnterConfirmationCode from "./pages/authentication/EnterConfirmationCode"
 import EnterConfirmationCodeWithUserName from "./pages/authentication/EnterConfirmationCodeWithUserName";
 import ForgetPassword_Step1 from "./pages/authentication/ForgetPassword_Step1";
 import ForgetPassword_Step2 from "./pages/authentication/ForgetPassword_Step2";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 export default function App() {
   const [state, dispatch] = React.useReducer(mainReducer, initialState);
@@ -32,7 +34,8 @@ export default function App() {
             path="/verify-user-with-identity"
             component={EnterConfirmationCodeWithUserName}
           />
-          {/* <Redirect from="/" to="/signin"></Redirect> */}
+          <PrivateRoute path="/dashboard" component={Dashboard} />
+          <Redirect from="/" to="/signin"></Redirect>
         </Switch>
       </DispatchContext.Provider>
     </StateContext.Provider>

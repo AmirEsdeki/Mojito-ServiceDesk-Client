@@ -1,4 +1,4 @@
-import { red } from '@material-ui/core/colors';
+import { red } from "@material-ui/core/colors";
 import {
   StylesProvider,
   jssPreset,
@@ -17,16 +17,19 @@ let theme = createMuiTheme({
   },
   palette: {
     primary: {
-      main: '#54a7c8',
+      //main: "#54a7c8", //asli
+      main: "#376374",
     },
     secondary: {
-      main: '#376374',
+      //main: "#795548",
+      main: "#d84315",
+      //main: "#376374", //asli
     },
     error: {
       main: red.A400,
     },
     background: {
-      default: '#fff',
+      default: "#fff",
     },
   },
 });

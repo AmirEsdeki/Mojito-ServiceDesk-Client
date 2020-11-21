@@ -28,7 +28,8 @@
     "react-full-screen": "^0.3.1",
     "react-material-ui-form-validator": "^2.1.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "latest"
+    "react-scripts": "latest",
+    "recharts": "^1.8.5"
   },
   "devDependencies": {
     "prettify": "^0.1.7"

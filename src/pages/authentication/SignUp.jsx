@@ -272,13 +272,13 @@ function SignUp(props) {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/verify-user-with-identity" variant="body2">
-                  {"ورود کد اعتبارسنجی قبلی"}
+                <Link href="/signin" variant="body2">
+                  {"بازگشت به صفحه ورود"}
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signin" variant="body2">
-                  {"بازگشت به صفحه ورود"}
+                <Link href="/verify-user-with-identity" variant="body2">
+                  {"ورود کد اعتبارسنجی قبلی"}
                 </Link>
               </Grid>
             </Grid>
