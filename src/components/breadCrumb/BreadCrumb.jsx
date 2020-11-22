@@ -37,7 +37,7 @@ export default function Breadcrumb(props) {
 
   return (
     <div className={classes.root}>
-      <Breadcrumbs aria-label="breadcrumb">
+      <Breadcrumbs separator="›" aria-label="breadcrumb">
         <Link
           color="inherit"
           href="/"

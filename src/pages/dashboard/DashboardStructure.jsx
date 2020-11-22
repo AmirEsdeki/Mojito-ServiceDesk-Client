@@ -24,6 +24,7 @@ import { useDispatch } from "../../context/store";
 import SampleReport from "../sampleReportPage/SampleReport";
 import PrivateRoute from "../../components/route/PrivateRoute";
 import NewTicket from "../newTicket/NewTicket";
+import Avatar from "@material-ui/core/Avatar";
 
 const drawerWidth = 240;
 
@@ -148,6 +149,7 @@ export default function DashboardStructure() {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography
             component="h1"
             variant="h6"
@@ -177,6 +179,7 @@ export default function DashboardStructure() {
           >
             <ExitToAppIcon />
           </IconButton>
+          <Avatar alt="Remy Sharp" src="/userProfile.png" />
         </Toolbar>
       </AppBar>
       <Drawer
@@ -195,7 +198,7 @@ export default function DashboardStructure() {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="xl" className={classes.container}>
+        <Container maxWidth="lg" className={classes.container}>
           <PrivateRoute
             path="/dashboard/ticket-report"
             component={SampleReport}

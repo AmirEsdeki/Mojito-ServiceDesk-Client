@@ -1,16 +1,29 @@
 import React from "react";
 import RichTextEditor from "./../../components/wysiwyg/RichTextEditor";
 import { makeStyles } from "@material-ui/core/styles";
-import { Divider, Grid } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Breadcrumb, {
-  BreadcrumbLink,
   BreadcrumbTypography,
 } from "./../../components/breadCrumb/BreadCrumb";
 import { useHistory } from "react-router-dom";
+import CustomDivider from "../../components/divider/CustomDivider";
+import { ValidatorForm } from "react-material-ui-form-validator";
+import { TextValidator } from "react-material-ui-form-validator";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
+  propsCard: {
+    minHeight: "300px",
+    padding: theme.spacing(3),
+  },
+  button: {
+    margin: theme.spacing(3),
+  },
+  buttonArea: {
+    paddingRight: theme.spacing(3),
+    paddingLeft: theme.spacing(3),
+  },
 }));
 
 const NewTicket = (props) => {
@@ -60,11 +73,90 @@ const NewTicket = (props) => {
       <Breadcrumb>
         <BreadcrumbTypography linkText={"ایجاد تیکت جدید"} />
       </Breadcrumb>
+      <Typography>
+        <strong>ایجاد تیکت جدید</strong>
+      </Typography>
+      <CustomDivider />
 
-      <Grid container spacing={0}>
-        <Grid item xs={12} sm={4} md={3} component={Paper} elevation={6}></Grid>
-        <Grid item xs={12} sm={8} md={9} component={Paper} elevation={6}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={5} md={4}>
+          <Paper className={classes.propsCard} elevation={1}>
+            <ValidatorForm
+              onSubmit={loginClickHandler}
+              className={classes.form}
+            >
+              <TextValidator
+                size="small"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                id="username"
+                label="عنوان تیکت"
+                name="username"
+                autoComplete="username"
+                autoFocus
+                validators={["required"]}
+                errorMessages={["این فیلد اجباری است"]}
+                autoComplete="off"
+                // onChange={handleChange}
+                // ref={userNameRef}
+                // value={userName}
+              />
+              <TextValidator
+                size="small"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                name="password"
+                label="رمز عبور"
+                type="password"
+                id="password"
+                validators={["required"]}
+                errorMessages={["این فیلد اجباری است"]}
+                autoComplete="current-password"
+                // onChange={handleChange}
+                // ref={passwordRef}
+                // value={password}
+              />
+            </ValidatorForm>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} sm={7} md={8}>
           <RichTextEditor></RichTextEditor>
+        </Grid>
+      </Grid>
+
+      <CustomDivider />
+
+      <Grid
+        className={classes.buttonArea}
+        container
+        alignItems="center"
+        component={Paper}
+        style={{ height: "60px" }}
+        elevation={0}
+      >
+        <Grid item xs>
+          <Button
+            className={classes.button}
+            type="submit"
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            ثبت تیکت
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            className={classes.button}
+            type="submit"
+            variant="outlined"
+            color="secondary"
+            className={classes.submit}
+          >
+            منصرف شدم
+          </Button>
         </Grid>
       </Grid>
     </div>
