@@ -17,6 +17,7 @@ import auth from "../../api/auth/auth";
 import { storeToken } from "../../helpers/token";
 import jwt_decode from "jwt-decode";
 import { useDispatch } from "../../context/store";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -74,12 +75,17 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     fontSize: "1.1rem",
   },
+  oneTimeSubmit: {
+    margin: theme.spacing(0, 0, 2),
+    fontSize: "1.1rem",
+  },
 }));
 
 export default function SignInSide() {
   /* -------------------------------- variables ------------------------------- */
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
   /* -------------------------------------------------------------------------- */
 
   /* ---------------------------------- refs ---------------------------------- */
@@ -200,6 +206,26 @@ export default function SignInSide() {
               className={classes.submit}
             >
               ورود به پورتال
+            </Button>
+            <br />
+            <Typography color="textSecondary" align="center" variant="h6">
+              یا
+            </Typography>
+            <br />
+
+            <Button
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.oneTimeSubmit}
+              variant="outlined"
+              onClick={() => {
+                history.push("/forget-password-step1", {
+                  nextIsConfirmCode: true,
+                });
+              }}
+            >
+              ورود با رمز یک بار مصرف
             </Button>
             <Grid container>
               <Grid item xs>
