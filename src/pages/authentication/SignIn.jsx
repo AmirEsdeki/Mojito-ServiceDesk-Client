@@ -22,9 +22,9 @@ import { useHistory } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {"تمام حقوق برای شرکت"}{" "}
+      {"تمامی حقوق مالکیت معنوی این وب‌سایت برای شرکت "}{" "}
       <Link color="inherit" href="http://faranam.net/">
-        فرانام
+        <span style={{ color: "#376374" }}>فرانام</span>
       </Link>{" "}
       {"محفوظ است"} {new Date().getFullYear()}
       {"."}
