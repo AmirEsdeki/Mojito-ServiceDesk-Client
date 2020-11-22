@@ -6,9 +6,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
@@ -17,11 +15,7 @@ import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import {
-  MainListItems,
-  secondaryListItems,
-  tertiaryListItems,
-} from "./dashboardElements/listItems";
+import { MainListItems } from "./dashboardElements/listItems";
 
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -31,24 +25,12 @@ import SampleReport from "../sampleReportPage/SampleReport";
 import PrivateRoute from "../../components/route/PrivateRoute";
 import NewTicket from "../newTicket/NewTicket";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"تمام حقوق برای شرکت"}{" "}
-      <Link color="inherit" href="http://faranam.net/">
-        فرانام
-      </Link>{" "}
-      {"محفوظ است"} {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    backgroundColor: theme.palette.grey[100],
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
@@ -61,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
   },
   appBar: {
+    backgroundImage: `linear-gradient(-17deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.light} 100%)`,
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -85,6 +68,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   drawerPaper: {
+    //backgroundImage: `linear-gradient(360deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.light} 100%)`,
+    backgroundColor: theme.palette.grey[200],
     overflowY: "auto",
     height: "100%",
     position: "relative",
@@ -101,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    width: theme.spacing(7),
+    width: theme.spacing(8),
     [theme.breakpoints.up("sm")]: {
       width: theme.spacing(8),
     },
@@ -206,24 +191,16 @@ export default function DashboardStructure() {
             <ChevronRightIcon />
           </IconButton>
         </div>
-        <Divider />
         <MainListItems />
-        <Divider />
-        <List>{secondaryListItems}</List>
-        <Divider />
-        <List>{tertiaryListItems}</List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
+        <Container maxWidth="xl" className={classes.container}>
           <PrivateRoute
             path="/dashboard/ticket-report"
             component={SampleReport}
           />
           <PrivateRoute path="/dashboard/new-ticket" component={NewTicket} />
-          <Box pt={4}>
-            <Copyright />
-          </Box>
         </Container>
       </main>
     </div>

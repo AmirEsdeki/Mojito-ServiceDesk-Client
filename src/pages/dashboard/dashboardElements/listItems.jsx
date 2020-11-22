@@ -1,0 +1,175 @@
+import React from "react";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import EmailIcon from "@material-ui/icons/Email";
+import MoveToInboxIcon from "@material-ui/icons/MoveToInbox";
+import AssessmentIcon from "@material-ui/icons/Assessment";
+import StorefrontIcon from "@material-ui/icons/Storefront";
+import HttpIcon from "@material-ui/icons/Http";
+import PriorityHighIcon from "@material-ui/icons/PriorityHigh";
+import SubjectIcon from "@material-ui/icons/Subject";
+import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
+import LabelIcon from "@material-ui/icons/Label";
+import AccountTreeIcon from "@material-ui/icons/AccountTree";
+import GroupIcon from "@material-ui/icons/Group";
+import PersonIcon from "@material-ui/icons/Person";
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import { useHistory } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import AddBoxIcon from "@material-ui/icons/AddBox";
+
+const useStyle = makeStyles((theme) => ({
+  createTicketIcon: {
+    color: theme.palette.secondary.main,
+    fontSize: "3rem",
+    marginLeft: "-8.5px",
+  },
+  createTicketListItem: {
+    border: "0px solid ",
+    borderRadius: "45px",
+    width: "99%",
+  },
+  icons: {
+    color: theme.palette.primary.dark,
+  },
+}));
+
+export const MainListItems = () => {
+  const history = useHistory();
+  const classes = useStyle();
+  return (
+    <div>
+      <Divider />
+      <List>
+        <ListItem
+          className={classes.createTicketListItem}
+          button
+          onClick={() => {
+            history.push("/dashboard/new-ticket");
+          }}
+        >
+          <ListItemIcon>
+            <AddBoxIcon className={classes.createTicketIcon} />
+          </ListItemIcon>
+          <ListItemText primary="ایجاد تیکت جدید" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <MailOutlineIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="تیکت های باز من" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <EmailIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="تیکت های بسته من" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <MoveToInboxIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="همه تیکت ها" />
+        </ListItem>
+        <ListItem
+          button
+          onClick={() => {
+            history.push("/dashboard/ticket-report");
+          }}
+        >
+          <ListItemIcon>
+            <AssessmentIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="گزارش های تیکت" />
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListSubheader inset>پیکربندی سیستم تیکتینگ</ListSubheader>
+        <ListItem button>
+          <ListItemIcon>
+            <StorefrontIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="محصولات" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <HttpIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="آدرس سامانه ها" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <PriorityHighIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="اولویت ها" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <SubjectIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="موضوعات تیکت" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <AssignmentTurnedInIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="وضعیت تیکت" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <LabelIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="برچسب ها" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <AccountTreeIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="مکانیزم اختصاص دهی" />
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListSubheader inset>کاربران و گروه ها</ListSubheader>
+        <ListItem button>
+          <ListItemIcon>
+            <PersonIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="کاربران" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <GroupIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="گروه ها" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <AssignmentIndIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="انواع گروه ها" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <VerifiedUserIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="سمت های سازمانی" />
+        </ListItem>
+        <ListItem button>
+          <ListItemIcon>
+            <ShoppingBasketIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="مشتریان" />
+        </ListItem>
+      </List>
+    </div>
+  );
+};

@@ -17,6 +17,11 @@ body {
 
 body,
 html {
-  // font-size: 62.5%;
+  font-size: 100%;
   // direction: rtl;
+}
+
+//for fixing the summernote wysiwyg
+.note-editor.note-frame.panel.panel-default {
+  margin-bottom: 0 !important;
 }
