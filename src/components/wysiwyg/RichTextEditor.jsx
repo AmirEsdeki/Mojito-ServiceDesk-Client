@@ -10,35 +10,33 @@ import "bootstrap/js/dropdown";
 import "bootstrap/js/tooltip";
 import "bootstrap/dist/css/bootstrap.css";
 
-class RichTextEditor extends Component {
-  onChange(content) {
-    console.log("onChange", content);
-  }
+const RichTextEditor = (props) => {
+  const onChange = (content) => {
+    props.onChange(content);
+  };
 
-  render() {
-    return (
-      <ReactSummernote
-        value="Default value"
-        options={{
-          //disableResizeEditor: true,
-          lang: "en-EN",
-          height: 350,
-          dialogsInBody: true,
-          toolbar: [
-            ["font", ["bold", "underline", "italic"]],
-            ["fontsize", ["fontsize"]],
-            // ["style", ["style"]],
-            ["para", ["ul", "ol", "paragraph"]],
-            ["table", ["table"]],
-            ["color", ["color"]],
-            //["insert", ["link"]], //["link", "picture", "video"]
-            //["view", ["fullscreen", "codeview"]],
-          ],
-        }}
-        onChange={this.onChange}
-      />
-    );
-  }
-}
+  return (
+    <ReactSummernote
+      value="Default value"
+      options={{
+        //disableResizeEditor: true,
+        lang: "en-EN",
+        height: 350,
+        dialogsInBody: true,
+        toolbar: [
+          ["font", ["bold", "underline", "italic"]],
+          ["fontsize", ["fontsize"]],
+          // ["style", ["style"]],
+          ["para", ["ul", "ol", "paragraph"]],
+          ["table", ["table"]],
+          ["color", ["color"]],
+          //["insert", ["link"]], //["link", "picture", "video"]
+          //["view", ["fullscreen", "codeview"]],
+        ],
+      }}
+      onChange={onChange}
+    />
+  );
+};
 
 export default RichTextEditor;

@@ -36,7 +36,11 @@ class BaseAPI {
         if (response.data.statusCode && response.data.statusCode != 200)
           console.log(response.data);
 
-        if (raiseInfo && response.data.message)
+        if (
+          raiseInfo &&
+          response.data.message &&
+          response.data.message != "GET Request successful."
+        )
           showNotify({
             backgroundColor: "#109a0f",
             showAction: false,
