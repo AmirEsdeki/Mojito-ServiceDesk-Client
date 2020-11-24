@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     lineHeight: "15px",
     borderRadius: 2,
+    display: "inline-block",
+    borderRadius: "20px",
+    margin: theme.spacing(0.5),
   },
   popper: {
     border: "1px solid rgba(27,31,35,.15)",

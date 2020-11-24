@@ -18,11 +18,13 @@ let theme = createMuiTheme({
   palette: {
     primary: {
       //main: "#54a7c8", //asli
-      main: "#376374",
+      //main: "#376374",
+      main: "#006d77",
     },
     secondary: {
       //main: "#795548",
-      main: "#d84315",
+      main: "#83c5be",
+      // main: "#d84315",
       //main: "#376374", //asli
     },
     error: {

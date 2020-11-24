@@ -17,6 +17,8 @@ import { Autocomplete } from "@material-ui/lab";
 import TicketsService from "./../../api/tickets/priorities";
 import LabelPicker from "./../../components/labelPicker/LabelPicker";
 import LabelsService from "./../../api/labels/labels";
+import BasicUploader from "../../components/fileUploader/BasicUploader";
+import Uploader from "./../../components/fileUploader/Uploader";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -66,6 +68,7 @@ const NewTicket = (props) => {
   const [priorities, setPriorities] = React.useState();
   const [labels, setLabels] = React.useState();
   const [selectedLabels, setSelectedLabels] = React.useState([]);
+  const [uploadedFiles, setUploadedFiles] = React.useState([]);
   const [
     ticketIssueAutoCompleteValues,
     setTicketIssueAutoCompleteValues,
@@ -189,13 +192,9 @@ const NewTicket = (props) => {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={5} md={4}>
           <Paper className={classes.propsCard} elevation={1}>
-            <ValidatorForm
-              onSubmit={submitHandler}
-              onError={submitHandler}
-              id="contact_form"
-            >
+            <ValidatorForm onSubmit={submitHandler} id="contact_form">
               <TextValidator
-                size="small"
+                //size="small"
                 variant="outlined"
                 margin="normal"
                 fullWidth
@@ -304,6 +303,12 @@ const NewTicket = (props) => {
                   }}
                 />
               )}
+              <Uploader
+                onChange={(e) => {
+                  console.log(e);
+                  setUploadedFiles(e);
+                }}
+              />
             </ValidatorForm>
           </Paper>
         </Grid>

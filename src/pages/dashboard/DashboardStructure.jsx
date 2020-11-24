@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -11,7 +10,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 
-import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -69,8 +67,22 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   drawerPaper: {
-    //backgroundImage: `linear-gradient(360deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.light} 100%)`,
-    backgroundColor: theme.palette.grey[200],
+    "&:before": {
+      content: "''",
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      // boxShadow: "inset 0 0 2000px rgba(255, 255, 255, .5)",
+      // boxShadow: "inset 0 0 2000px rgba(255, 255, 255, .5)",
+      filter: "blur(5px)",
+      background: "inherit",
+      zIndex: -1,
+    },
+    backgroundAttachment: "fixed",
+    backgroundImage: `url(/photo-1605794785092-86ca6a5ce0ce.jpg)`,
+    //backgroundColor: theme.palette.grey[200],
     overflowY: "auto",
     height: "100%",
     position: "relative",
@@ -81,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
+
   drawerPaperClose: {
     overflowX: "hidden",
     transition: theme.transitions.create("width", {

@@ -39,6 +39,9 @@ const useStyle = makeStyles((theme) => ({
   icons: {
     color: theme.palette.primary.dark,
   },
+  divider: {
+    zIndex: 5,
+  },
 }));
 
 export const MainListItems = () => {
@@ -46,7 +49,7 @@ export const MainListItems = () => {
   const classes = useStyle();
   return (
     <div>
-      <Divider />
+      <Divider className={classes.divider} />
       <List>
         <ListItem
           className={classes.createTicketListItem}
@@ -90,7 +93,7 @@ export const MainListItems = () => {
           <ListItemText primary="گزارش های تیکت" />
         </ListItem>
       </List>
-      <Divider />
+      <Divider className={classes.divider} />
       <List>
         <ListSubheader inset>پیکربندی سیستم تیکتینگ</ListSubheader>
         <ListItem button>
@@ -136,7 +139,7 @@ export const MainListItems = () => {
           <ListItemText primary="مکانیزم اختصاص دهی" />
         </ListItem>
       </List>
-      <Divider />
+      <Divider className={classes.divider} />
       <List>
         <ListSubheader inset>کاربران و گروه ها</ListSubheader>
         <ListItem button>
