@@ -63,7 +63,12 @@ export const MainListItems = () => {
           </ListItemIcon>
           <ListItemText primary="ایجاد تیکت جدید" />
         </ListItem>
-        <ListItem button>
+        <ListItem
+          button
+          onClick={() => {
+            history.push("/dashboard/my-tickets");
+          }}
+        >
           <ListItemIcon>
             <MailOutlineIcon className={classes.icons} />
           </ListItemIcon>
