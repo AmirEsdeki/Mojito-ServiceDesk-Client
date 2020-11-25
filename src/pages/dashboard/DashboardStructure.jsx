@@ -193,7 +193,7 @@ export default function DashboardStructure() {
           >
             <ExitToAppIcon />
           </IconButton>
-          <Avatar alt="Remy Sharp" src="/userProfile.png" />
+          <Avatar alt="profile" src="/userProfile.png" />
         </Toolbar>
       </AppBar>
       <Drawer
