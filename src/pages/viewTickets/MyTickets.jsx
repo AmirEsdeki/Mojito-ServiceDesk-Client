@@ -26,6 +26,8 @@ export default function MyTickets(props) {
       </Typography>
       <CustomDivider />
       <Ticket></Ticket>
+      <Ticket></Ticket>
+      <Ticket></Ticket>
     </div>
   );
 }

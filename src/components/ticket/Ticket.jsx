@@ -1,9 +1,16 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Paper, Typography, Link, Avatar } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  Typography,
+  Link,
+  Avatar,
+  Badge,
+} from "@material-ui/core";
 import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasketOutlined";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import AttachmentIcon from "@material-ui/icons/Attachment";
+import AttachmentIcon from "@material-ui/icons/AttachFile";
 import { withTheme } from "@material-ui/core/styles";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
@@ -13,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
     // marginBottom: theme.spacing(),
     minHeight: "110px",
     borderRadius: "17px",
+    borderWidth: "2px",
+    marginTop: theme.spacing(3),
   },
   title: {
     marginTop: theme.spacing(1),
@@ -20,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   caption: {
     marginLeft: theme.spacing(2),
+    marginTop: theme.spacing(-2),
   },
   upRow: {
     minHeight: "75px",
@@ -76,6 +86,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.8rem",
     fontWeight: "bold",
     color: theme.palette.grey[600],
+  },
+  marginRight: {
+    marginLeft: theme.spacing(1.2),
   },
 }));
 
@@ -158,15 +171,19 @@ const Ticket = (props) => {
                 />
               </td>
               <td className={classes.iconTd}>
-                <MailOutlineIcon
-                  style={{ color: props.theme.palette.grey[500] }}
-                />
+                <Badge badgeContent={4} color="error">
+                  <MailOutlineIcon
+                    style={{ color: props.theme.palette.grey[500] }}
+                  />
+                </Badge>
               </td>
               <td className={classes.iconTd}>
-                <AttachmentIcon
-                  color="secondary"
-                  style={{ color: props.theme.palette.grey[500] }}
-                />
+                <Badge badgeContent={4} color="error">
+                  <AttachmentIcon
+                    color="secondary"
+                    style={{ color: props.theme.palette.grey[500] }}
+                  />
+                </Badge>
               </td>
 
               <td className={classes.otherTds}>
@@ -218,7 +235,60 @@ const Ticket = (props) => {
                   </tr>
                 </table>
               </td>
-              <td></td>
+              <td className={classes.otherTds} style={{ width: "7%" }}>
+                <tr>
+                  <Typography
+                    className={classes.marginRight}
+                    variant="caption"
+                    color="textSecondary"
+                  >
+                    اولویت
+                  </Typography>
+                </tr>
+                <tr>
+                  <Typography
+                    className={classes.name + " " + classes.marginRight}
+                  >
+                    بحرانی
+                  </Typography>
+                </tr>
+              </td>
+              <td className={classes.otherTds} style={{ width: "20%" }}>
+                <tr>
+                  <Typography
+                    className={classes.marginRight}
+                    variant="caption"
+                    color="textSecondary"
+                  >
+                    موضوع تیکت
+                  </Typography>
+                </tr>
+                <tr>
+                  <Typography
+                    className={classes.name + " " + classes.marginRight}
+                  >
+                    درخواست مستندات
+                  </Typography>
+                </tr>
+              </td>
+              <td>
+                <tr>
+                  <Typography
+                    className={classes.marginRight}
+                    variant="caption"
+                    color="textSecondary"
+                  >
+                    آدرس سامانه
+                  </Typography>
+                </tr>
+                <tr>
+                  <Typography
+                    className={classes.name + " " + classes.marginRight}
+                  >
+                    www.mahtab.ir
+                  </Typography>
+                </tr>
+              </td>
             </tr>
           </tbody>
         </table>
