@@ -14,10 +14,9 @@ import TicketIssuesService from "../../api/ticketIssues/ticketIssues";
 import IssueUrlsService from "../../api/issueUrls/issueUrls";
 import PrioritiesService from "../../api/priorities/priorities";
 import { Autocomplete } from "@material-ui/lab";
-import TicketsService from "./../../api/tickets/priorities";
+import TicketsService from "./../../api/tickets/tickets";
 import LabelPicker from "./../../components/labelPicker/LabelPicker";
 import LabelsService from "./../../api/labels/labels";
-import BasicUploader from "../../components/fileUploader/BasicUploader";
 import Uploader from "./../../components/fileUploader/Uploader";
 
 const useStyles = makeStyles((theme) => ({

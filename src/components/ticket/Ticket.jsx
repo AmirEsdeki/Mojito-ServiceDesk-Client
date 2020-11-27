@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -8,11 +8,11 @@ import {
   Avatar,
   Badge,
 } from "@material-ui/core";
-import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasketOutlined";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import AttachmentIcon from "@material-ui/icons/AttachFile";
 import { withTheme } from "@material-ui/core/styles";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   mainBox: {
@@ -93,7 +93,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Ticket = (props) => {
+  /* -------------------------------- variables ------------------------------- */
   const classes = useStyles();
+  /* -------------------------------------------------------------------------- */
 
   return (
     <Grid
@@ -121,7 +123,7 @@ const Ticket = (props) => {
                 variant="subtitle2"
                 align="center"
               >
-                #asjfa1123423
+                {props.identifier}
               </Typography>
             </Grid>
           </Grid>
@@ -129,7 +131,7 @@ const Ticket = (props) => {
             <Grid item xs={12}>
               <div className={classes.ticketStatus}>
                 <Typography align="center" color="inherit">
-                  جدید
+                  {props.ticketStatus}
                 </Typography>
               </div>
             </Grid>
@@ -144,13 +146,11 @@ const Ticket = (props) => {
           id="title-conversation-container"
         >
           <Grid item xs={12} className={classes.title}>
-            <Link component={Typography}>
-              مشکل در سامانه مهتاب به علت قطعی ارتباط
-            </Link>
+            <Link component={Typography}>{props.title}</Link>
           </Grid>
           <Grid item xs={12} className={classes.caption}>
             <Typography color="textSecondary" variant="caption">
-              این سامانه یه هفتس که قطع شده لطفا یه کاری بکنید جدا
+              {props.lastMessage}
             </Typography>
           </Grid>
         </Grid>
@@ -171,20 +171,22 @@ const Ticket = (props) => {
                 />
               </td>
               <td className={classes.iconTd}>
-                <Badge badgeContent={4} color="error">
+                <Badge badgeContent={props.conversationCount} color="error">
                   <MailOutlineIcon
                     style={{ color: props.theme.palette.grey[500] }}
                   />
                 </Badge>
               </td>
-              <td className={classes.iconTd}>
-                <Badge badgeContent={4} color="error">
-                  <AttachmentIcon
-                    color="secondary"
-                    style={{ color: props.theme.palette.grey[500] }}
-                  />
-                </Badge>
-              </td>
+              {props.attachmentCount != 0 && (
+                <td className={classes.iconTd}>
+                  <Badge badgeContent={props.attachmentCount} color="error">
+                    <AttachmentIcon
+                      color="secondary"
+                      style={{ color: props.theme.palette.grey[500] }}
+                    />
+                  </Badge>
+                </td>
+              )}
 
               <td className={classes.otherTds}>
                 <table style={{ width: "100%" }}>
@@ -197,8 +199,12 @@ const Ticket = (props) => {
                       }}
                     >
                       <Avatar
+                        src={
+                          props.assigneeImage
+                            ? `data:image/jpg;base64, ${props.assigneeImage}`
+                            : "/userProfile.png"
+                        }
                         alt="profile"
-                        src="/userProfile.png"
                         className={classes.small}
                         style={{}}
                       />
@@ -209,7 +215,9 @@ const Ticket = (props) => {
                           مسئول
                         </Typography>
                       </tr>
-                      <tr className={classes.name}>امیر اسدکی</tr>
+                      <tr className={classes.name}>
+                        {props.assignee ? props.assignee : "تنظیم نشده"}
+                      </tr>
                     </td>
                   </tr>
                 </table>
@@ -219,8 +227,8 @@ const Ticket = (props) => {
                   <tr>
                     <td className={classes.nestedTd}>
                       <Avatar
+                        src={`data:image/jpg;base64, ${props.openedByImage}`}
                         alt="profile"
-                        src="/userProfile.png"
                         className={classes.small}
                       />
                     </td>
@@ -230,7 +238,7 @@ const Ticket = (props) => {
                           مالک
                         </Typography>
                       </tr>
-                      <tr className={classes.name}>سمیه اصلاحی</tr>
+                      <tr className={classes.name}>{props.openedBy}</tr>
                     </td>
                   </tr>
                 </table>
@@ -249,7 +257,7 @@ const Ticket = (props) => {
                   <Typography
                     className={classes.name + " " + classes.marginRight}
                   >
-                    بحرانی
+                    {props.priority}
                   </Typography>
                 </tr>
               </td>
@@ -267,7 +275,7 @@ const Ticket = (props) => {
                   <Typography
                     className={classes.name + " " + classes.marginRight}
                   >
-                    درخواست مستندات
+                    {props.ticketIssue}
                   </Typography>
                 </tr>
               </td>
@@ -285,7 +293,7 @@ const Ticket = (props) => {
                   <Typography
                     className={classes.name + " " + classes.marginRight}
                   >
-                    www.mahtab.ir
+                    {props.issueUrl}
                   </Typography>
                 </tr>
               </td>
@@ -295,6 +303,24 @@ const Ticket = (props) => {
       </Grid>
     </Grid>
   );
+};
+
+Ticket.PropTypes = {
+  isClosed: PropTypes.bool,
+  conversationCount: PropTypes.number,
+  attachmentCount: PropTypes.number,
+  openedByImage: PropTypes.string,
+  identifier: PropTypes.string,
+  assigneeImage: PropTypes.string,
+  assignee: PropTypes.string,
+  openedBy: PropTypes.string,
+  priority: PropTypes.string,
+  ticketIssue: PropTypes.string,
+  issueUrl: PropTypes.string,
+  ticketLabels: PropTypes.arrayOf(PropTypes.string),
+  ticketStatus: PropTypes.string,
+  title: PropTypes.string,
+  lastMassage: PropTypes.string,
 };
 
 export default withTheme(Ticket);

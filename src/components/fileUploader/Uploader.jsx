@@ -2,6 +2,7 @@ import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import "core-js/modules/es.array.from";
 import { Button } from "@material-ui/core";
+import "./basicUploader.css";
 
 const Uploader = (props) => {
   const [myFiles, setMyFiles] = React.useState([]);
