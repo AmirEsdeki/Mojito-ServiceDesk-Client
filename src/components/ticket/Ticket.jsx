@@ -146,11 +146,17 @@ const Ticket = (props) => {
           id="title-conversation-container"
         >
           <Grid item xs={12} className={classes.title}>
-            <Link component={Typography}>{props.title}</Link>
+            <Link component={Typography}>
+              {props.title.length > 70
+                ? props.title.substring(0, 67) + "..."
+                : props.title}
+            </Link>
           </Grid>
           <Grid item xs={12} className={classes.caption}>
             <Typography color="textSecondary" variant="caption">
-              {props.lastMessage}
+              {props.lastMessage.length > 70
+                ? props.lastMessage.substring(0, 67) + "..."
+                : props.lastMessage}
             </Typography>
           </Grid>
         </Grid>
@@ -305,7 +311,7 @@ const Ticket = (props) => {
   );
 };
 
-Ticket.PropTypes = {
+Ticket.propTypes = {
   isClosed: PropTypes.bool,
   conversationCount: PropTypes.number,
   attachmentCount: PropTypes.number,
@@ -317,7 +323,7 @@ Ticket.PropTypes = {
   priority: PropTypes.string,
   ticketIssue: PropTypes.string,
   issueUrl: PropTypes.string,
-  ticketLabels: PropTypes.arrayOf(PropTypes.string),
+  ticketLabels: PropTypes.arrayOf(PropTypes.object),
   ticketStatus: PropTypes.string,
   title: PropTypes.string,
   lastMassage: PropTypes.string,

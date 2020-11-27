@@ -7,6 +7,7 @@ import { Typography } from "@material-ui/core";
 import CustomDivider from "../../components/divider/CustomDivider";
 import TicketsService from "./../../api/tickets/tickets";
 import { makeStyles } from "@material-ui/core/styles";
+import extractTextContent from "./../../helpers/extractTextContent";
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -25,8 +26,9 @@ export default function MyTickets(props) {
     if (res.result && res.result.items) {
       const data = res.result.items;
       var parsedDate = data.map((d) => ({
+        key: d.id,
         title: d.title,
-        lastMessage: d.lastMessage,
+        lastMessage: extractTextContent(d.lastMessage, true),
         isClosed: d.isClosed,
         conversationCount: d.conversationCount,
         attachmentCount: d.attachmentCount,
