@@ -23,7 +23,7 @@ import SampleReport from "../sampleReportPage/SampleReport";
 import PrivateRoute from "../../components/route/PrivateRoute";
 import NewTicket from "../newTicket/NewTicket";
 import Avatar from "@material-ui/core/Avatar";
-import MyTickets from "./../viewTickets/MyTickets";
+import ViewTickets from "./../viewTickets/ViewTickets";
 
 const drawerWidth = 240;
 
@@ -218,7 +218,10 @@ export default function DashboardStructure() {
             component={SampleReport}
           />
           <PrivateRoute path="/dashboard/new-ticket" component={NewTicket} />
-          <PrivateRoute path="/dashboard/my-tickets" component={MyTickets} />
+          <PrivateRoute
+            path="/dashboard/view-tickets/:which"
+            component={ViewTickets}
+          />
         </Container>
       </main>
     </div>

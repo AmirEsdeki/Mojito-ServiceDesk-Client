@@ -7,12 +7,14 @@ import {
   Link,
   Avatar,
   Badge,
+  useTheme,
 } from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import AttachmentIcon from "@material-ui/icons/AttachFile";
 import { withTheme } from "@material-ui/core/styles";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import PropTypes from "prop-types";
+import dateDiff from "../../helpers/dateDiff";
 
 const useStyles = makeStyles((theme) => ({
   mainBox: {
@@ -39,8 +41,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
   },
   ticketStatus: {
-    backgroundColor: "orange",
-    color: "white",
     borderRadius: "0px 8px 8px 0px",
   },
   identifier: {
@@ -90,11 +90,31 @@ const useStyles = makeStyles((theme) => ({
   marginRight: {
     marginLeft: theme.spacing(1.2),
   },
+  tag: {
+    marginTop: 3,
+    height: 20,
+    padding: ".15em 4px",
+    fontWeight: 600,
+    lineHeight: "15px",
+    borderRadius: 2,
+    display: "inline-block",
+    borderRadius: "20px",
+    margin: theme.spacing(0.5),
+  },
 }));
 
 const Ticket = (props) => {
   /* -------------------------------- variables ------------------------------- */
   const classes = useStyles();
+  const theme = useTheme();
+  /* -------------------------------------------------------------------------- */
+
+  /* -------------------------------- functions ------------------------------- */
+  const getColor = (statusLabel) => {
+    if ("باز") return "#d65900";
+    else if ("بسته") return "#0070b5";
+    else return "#7f00e0";
+  };
   /* -------------------------------------------------------------------------- */
 
   return (
@@ -129,7 +149,15 @@ const Ticket = (props) => {
           </Grid>
           <Grid item container alignItems="center">
             <Grid item xs={12}>
-              <div className={classes.ticketStatus}>
+              <div
+                className={classes.ticketStatus}
+                style={{
+                  backgroundColor: getColor(props.ticketStatus),
+                  color: theme.palette.getContrastText(
+                    getColor(props.ticketStatus)
+                  ),
+                }}
+              >
                 <Typography align="center" color="inherit">
                   {props.ticketStatus}
                 </Typography>
@@ -142,15 +170,32 @@ const Ticket = (props) => {
           item
           container
           alignItems="center"
-          xs={10}
+          xs={7}
           id="title-conversation-container"
         >
-          <Grid item xs={12} className={classes.title}>
-            <Link component={Typography}>
-              {props.title.length > 70
-                ? props.title.substring(0, 67) + "..."
-                : props.title}
-            </Link>
+          <Grid
+            item
+            container
+            alignItems="center"
+            xs={12}
+            className={classes.title}
+          >
+            <Grid item>
+              <Link component={Typography} style={{ cursor: "pointer" }}>
+                {props.title.length > 70
+                  ? props.title.substring(0, 67) + "..."
+                  : props.title}
+              </Link>
+            </Grid>
+            <Grid item>
+              <Typography
+                color="textSecondary"
+                variant="caption"
+                style={{ marginRight: theme.spacing(2) }}
+              >
+                {dateDiff(props.created)}
+              </Typography>
+            </Grid>
           </Grid>
           <Grid item xs={12} className={classes.caption}>
             <Typography color="textSecondary" variant="caption">
@@ -160,11 +205,23 @@ const Ticket = (props) => {
             </Typography>
           </Grid>
         </Grid>
-      </Grid>
 
-      {/* <Grid item xs={12}>
-        <Divider />
-      </Grid> */}
+        <Grid item container alignItems="center" xs={2} id="label-container">
+          {props.ticketLabels.map((label) => (
+            <Grid
+              item
+              key={label.title}
+              className={classes.tag}
+              style={{
+                backgroundColor: label.color,
+                color: theme.palette.getContrastText(label.color),
+              }}
+            >
+              {label.title}
+            </Grid>
+          ))}
+        </Grid>
+      </Grid>
 
       <Grid item container xs={12} id="down-row" className={classes.downRow}>
         <table className={classes.table}>
@@ -208,6 +265,8 @@ const Ticket = (props) => {
                         src={
                           props.assigneeImage
                             ? `data:image/jpg;base64, ${props.assigneeImage}`
+                            : props.closedByImage
+                            ? `data:image/jpg;base64, ${props.closedByImage}`
                             : "/userProfile.png"
                         }
                         alt="profile"
@@ -218,12 +277,20 @@ const Ticket = (props) => {
                     <td>
                       <tr>
                         <Typography variant="caption" color="textSecondary">
-                          مسئول
+                          {props.ticketStatus == "باز"
+                            ? "مسئول"
+                            : "بسته شده توسط"}
                         </Typography>
                       </tr>
-                      <tr className={classes.name}>
-                        {props.assignee ? props.assignee : "تنظیم نشده"}
-                      </tr>
+                      {props.ticketStatus == "باز" ? (
+                        <tr className={classes.name}>
+                          {props.assignee ? props.assignee : "تنظیم نشده"}
+                        </tr>
+                      ) : (
+                        <tr className={classes.name}>
+                          {props.closedBy ? props.closedBy : "نامشخص"}
+                        </tr>
+                      )}
                     </td>
                   </tr>
                 </table>
@@ -262,6 +329,9 @@ const Ticket = (props) => {
                 <tr>
                   <Typography
                     className={classes.name + " " + classes.marginRight}
+                    style={{
+                      color: props.priority == "بحرانی" ? "red" : "inherit",
+                    }}
                   >
                     {props.priority}
                   </Typography>
@@ -327,6 +397,9 @@ Ticket.propTypes = {
   ticketStatus: PropTypes.string,
   title: PropTypes.string,
   lastMassage: PropTypes.string,
+  closedBy: PropTypes.string,
+  closedByImage: PropTypes.string,
+  created: PropTypes.string,
 };
 
 export default withTheme(Ticket);

@@ -6,7 +6,7 @@ class LabelsServiceProvider extends BaseAPI {
       suffix: "ticketlabels/",
       raiseError: true,
       raiseInfo: true,
-      needsToken: false,
+      needsToken: true,
     });
   }
 

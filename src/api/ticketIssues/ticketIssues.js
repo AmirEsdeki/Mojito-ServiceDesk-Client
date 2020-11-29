@@ -6,7 +6,7 @@ class TicketIssueServiceProvider extends BaseAPI {
       suffix: "ticketissues/",
       raiseError: true,
       raiseInfo: true,
-      needsToken: false,
+      needsToken: true,
     });
   }
 

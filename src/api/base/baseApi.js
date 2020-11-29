@@ -3,7 +3,7 @@ import { readToken } from "../../helpers/token";
 import showNotify from "../../helpers/notify";
 import * as R from "ramda";
 
-let requestNeedsToken;
+let requestNeedsToken = true;
 
 /**
  * A HTTP service which created by Axios instance creator
@@ -24,6 +24,8 @@ class BaseAPI {
     this.httpService = axios.create({
       baseURL: `${baseURL}${suffix ? `/${suffix}` : ""}`,
     });
+    console.log("suffix", suffix);
+    console.log("needsToken", needsToken);
     requestNeedsToken = needsToken;
     this.requestInterceptors();
     this.responseInterceptors(raiseError, raiseInfo);
@@ -107,10 +109,10 @@ class BaseAPI {
   requestInterceptors() {
     this.httpService.interceptors.request.use(
       (config) => {
-        if (!config.headers.authorization && requestNeedsToken) {
+        if (!config.headers.Authorization && requestNeedsToken) {
           const token = readToken();
           if (token) {
-            config.headers.authorization = `berear ${token}`;
+            config.headers.Authorization = `Bearer ${token}`;
           }
         }
         return config;

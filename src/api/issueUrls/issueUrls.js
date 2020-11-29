@@ -6,7 +6,7 @@ class IssueUrlsServiceProvider extends BaseAPI {
       suffix: "issueurls/",
       raiseError: true,
       raiseInfo: true,
-      needsToken: false,
+      needsToken: true,
     });
   }
 

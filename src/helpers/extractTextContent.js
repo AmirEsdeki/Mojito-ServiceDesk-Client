@@ -8,5 +8,7 @@ export default function extractTextContent(s, space) {
       else children[i].innerText += " ";
     }
   }
-  return [span.textContent || span.innerText].toString().replace(/ +/g, " ");
+  return (
+    [span.textContent || span.innerText].toString().replace(/ +/g, " ") + " "
+  );
 }

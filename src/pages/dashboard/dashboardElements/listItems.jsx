@@ -63,29 +63,78 @@ export const MainListItems = () => {
           </ListItemIcon>
           <ListItemText primary="ایجاد تیکت جدید" />
         </ListItem>
+
         <ListItem
           button
           onClick={() => {
-            history.push("/dashboard/my-tickets");
+            history.push("/dashboard/view-tickets/OnlyTicketsOfAssignee", {
+              title: "اختصاص یافته به من",
+            });
           }}
         >
           <ListItemIcon>
             <MailOutlineIcon className={classes.icons} />
           </ListItemIcon>
-          <ListItemText primary="تیکت های باز من" />
+          <ListItemText primary="اختصاص یافته به من" />
         </ListItem>
-        <ListItem button>
+
+        <ListItem
+          button
+          onClick={() => {
+            history.push("/dashboard/view-tickets/OnlyTicketsOfGroup", {
+              title: "برای گروه من",
+            });
+          }}
+        >
+          <ListItemIcon>
+            <MailOutlineIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="برای گروه من" />
+        </ListItem>
+
+        <ListItem
+          button
+          onClick={() => {
+            history.push("/dashboard/view-tickets/OnlyOpenedByUser", {
+              title: "باز شده توسط من",
+            });
+          }}
+        >
+          <ListItemIcon>
+            <MailOutlineIcon className={classes.icons} />
+          </ListItemIcon>
+          <ListItemText primary="باز شده توسط من" />
+        </ListItem>
+
+        <ListItem
+          button
+          button
+          onClick={() => {
+            history.push("/dashboard/view-tickets/OnlyClosedByUser", {
+              title: "بسته شده توسط من",
+            });
+          }}
+        >
           <ListItemIcon>
             <EmailIcon className={classes.icons} />
           </ListItemIcon>
-          <ListItemText primary="تیکت های بسته من" />
+          <ListItemText primary="بسته شده توسط من" />
         </ListItem>
-        <ListItem button>
+
+        <ListItem
+          button
+          onClick={() => {
+            history.push("/dashboard/view-tickets/all", {
+              title: "همه تیکت ها",
+            });
+          }}
+        >
           <ListItemIcon>
             <MoveToInboxIcon className={classes.icons} />
           </ListItemIcon>
           <ListItemText primary="همه تیکت ها" />
         </ListItem>
+
         <ListItem
           button
           onClick={() => {

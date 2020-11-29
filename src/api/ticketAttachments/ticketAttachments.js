@@ -6,7 +6,7 @@ class PrioritiesServiceProvider extends BaseAPI {
       suffix: "priorities/",
       raiseError: true,
       raiseInfo: true,
-      needsToken: false,
+      needsToken: true,
     });
   }
 

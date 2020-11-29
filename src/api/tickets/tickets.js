@@ -3,10 +3,10 @@ import BaseAPI from "../base/baseApi";
 class TicketsServiceProvider extends BaseAPI {
   constructor() {
     super({
-      suffix: "tickets/",
+      suffix: "tickets",
       raiseError: true,
       raiseInfo: true,
-      needsToken: false,
+      needsToken: true,
     });
   }
 
