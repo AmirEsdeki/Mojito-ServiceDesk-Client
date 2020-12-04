@@ -3,11 +3,13 @@ import Ticket from "../../components/ticket/Ticket";
 import Breadcrumb, {
   BreadcrumbTypography,
 } from "../../components/breadCrumb/BreadCrumb";
-import { Typography } from "@material-ui/core";
+import { Fade, Grid, Grow, Slide, Typography, Zoom } from "@material-ui/core";
 import CustomDivider from "../../components/divider/CustomDivider";
 import TicketsService from "../../api/tickets/tickets";
 import { makeStyles } from "@material-ui/core/styles";
 import extractTextContent from "../../helpers/extractTextContent";
+import Loading from "../../components/progress/Loading";
+import { Container } from "@material-ui/core/Container";
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -16,12 +18,13 @@ export default function ViewTickets(props) {
   const classes = useStyles();
   const title = props.location.state?.title;
   const whichTicketsToShowWildCard = props.match.params?.which;
-  console.log(whichTicketsToShowWildCard);
+  let transitionInterval = 0;
   /* -------------------------------------------------------------------------- */
 
   /* --------------------------------- states --------------------------------- */
   const [tickets, setTickets] = React.useState([]);
   const [query, setQuery] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
   /* -------------------------------------------------------------------------- */
 
   /* -------------------------------- functions ------------------------------- */
@@ -50,10 +53,12 @@ export default function ViewTickets(props) {
 
   /* -------------------------------- dataFetch ------------------------------- */
   const getAllTickets = async () => {
+    setLoading(true);
     const res = await TicketsService.getAll({
       ...query,
       ...whichTicketsToShow(whichTicketsToShowWildCard),
     });
+    setLoading(false);
     if (res.result && res.result.items) {
       const data = res.result.items;
       var parsedDate = data.map((d) => ({
@@ -90,17 +95,24 @@ export default function ViewTickets(props) {
 
   /* ---------------------------------- hooks --------------------------------- */
   React.useEffect(() => {
+    //for reanimate the component
+    setTickets();
+
     getAllTickets();
   }, [whichTicketsToShowWildCard]);
 
   React.useEffect(() => {
-    console.log("userfrct");
     getAllTickets();
   }, [query]);
   /* -------------------------------------------------------------------------- */
 
   return (
     <div>
+      <Fade in={loading}>
+        <div>
+          <Loading></Loading>
+        </div>
+      </Fade>
       <Breadcrumb>
         <BreadcrumbTypography linkText={"تیکت های باز من"} />
       </Breadcrumb>
@@ -108,9 +120,48 @@ export default function ViewTickets(props) {
         <strong>{title}</strong>
       </Typography>
       <CustomDivider />
-      {tickets.map((ticket) => (
-        <Ticket key={ticket.id} {...ticket} />
-      ))}
+      {tickets && tickets.length == 0 && !loading && (
+        <Fade in={true} timeout={500}>
+          <Grid container alignContent="center" justify="center">
+            <Grid
+              alignContent="center"
+              item
+              style={{ marginTop: "60px", marginBottom: "60px" }}
+            >
+              <img
+                src="/messageinBottle.png"
+                style={{ opacity: "20%", borderRadius: "15%", width: "100%" }}
+              ></img>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography
+                align="center"
+                variant="h3"
+                color="textSecondary"
+                style={{ opacity: "15%" }}
+              >
+                هنوز تیکتی در این دسته وجود ندارد
+              </Typography>
+            </Grid>
+          </Grid>
+        </Fade>
+      )}
+      {!!tickets &&
+        tickets.map((ticket) => {
+          transitionInterval = transitionInterval + 100;
+          return (
+            <Zoom
+              in={tickets}
+              style={{
+                transitionDelay: true ? `${transitionInterval}ms` : "0ms",
+              }}
+            >
+              <div>
+                <Ticket key={ticket.id} {...ticket} />
+              </div>
+            </Zoom>
+          );
+        })}
     </div>
   );
 }

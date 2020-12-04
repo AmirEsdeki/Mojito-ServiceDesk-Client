@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -75,17 +75,15 @@ const useStyles = makeStyles((theme) => ({
       left: 0,
       right: 0,
       bottom: 0,
-      // boxShadow: "inset 0 0 2000px rgba(255, 255, 255, .5)",
-      // boxShadow: "inset 0 0 2000px rgba(255, 255, 255, .5)",
+      height: "100%",
       filter: "blur(5px)",
       background: "inherit",
       zIndex: -1,
     },
+    maxHeight: "100vh",
+    overflow: "auto",
     backgroundAttachment: "fixed",
     backgroundImage: `url(/photo-1605794785092-86ca6a5ce0ce.jpg)`,
-    //backgroundColor: theme.palette.grey[200],
-    overflowY: "auto",
-    height: "100%",
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -132,7 +130,25 @@ export default function DashboardStructure() {
   const classes = useStyles();
   const dispatch = useDispatch();
   /* -------------------------------------------------------------------------- */
+  /* ------------------------- mobile screen handling ------------------------- */
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    let isMobile = isMobileSize(window);
+    console.log("isMobile", isMobile);
+    if (isMobile) {
+      setOpen(false);
+    }
+  }, []);
 
+  const isMobileSize = (e) => {
+    if (e.innerWidth < 768) {
+      setIsMobile(true);
+      return true;
+    } else {
+      return false;
+    }
+  };
+  /* -------------------------------------------------------------------------- */
   /* --------------------- opening and closing the drawer --------------------- */
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -171,7 +187,7 @@ export default function DashboardStructure() {
             noWrap
             className={classes.title}
           >
-            میز کار فرانام
+            {!isMobile && "میز کار فرانام"}
           </Typography>
 
           <IconButton color="inherit">
@@ -180,7 +196,10 @@ export default function DashboardStructure() {
             </Badge>
           </IconButton>
 
-          <IconButton color="inherit">
+          <IconButton
+            color="inherit"
+            style={{ display: `${isMobile ? "none" : "default"}` }}
+          >
             <FullscreenIcon />
           </IconButton>
 
@@ -197,7 +216,7 @@ export default function DashboardStructure() {
         </Toolbar>
       </AppBar>
       <Drawer
-        variant="permanent"
+        variant={isMobile ? "temporary" : "persistent"}
         classes={{
           paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
         }}

@@ -1,7 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RichTextEditor from "./../../components/wysiwyg/RichTextEditor";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, FormHelperText, Grid, Typography } from "@material-ui/core";
+import {
+  Button,
+  Fade,
+  FormHelperText,
+  Grid,
+  Typography,
+} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Breadcrumb, {
   BreadcrumbTypography,
@@ -18,6 +24,8 @@ import TicketsService from "./../../api/tickets/tickets";
 import LabelPicker from "./../../components/labelPicker/LabelPicker";
 import LabelsService from "./../../api/labels/labels";
 import Uploader from "./../../components/fileUploader/Uploader";
+import Progress from "./../../components/progress/Progress";
+import Loading from "../../components/progress/Loading";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -53,33 +61,34 @@ const NewTicket = (props) => {
   /* -------------------------------------------------------------------------- */
 
   /* --------------------------------- states --------------------------------- */
-  const [model, setModel] = React.useState({
+  const [model, setModel] = useState({
     title: "",
     issueUrlId: null,
     priorityId: null,
     ticketIssueId: null,
     isMessagePublic: true,
   });
-  const [message, setMassage] = React.useState();
-
-  const [ticketIssues, setTicketIssues] = React.useState();
-  const [issueUrls, setIssueUrls] = React.useState();
-  const [priorities, setPriorities] = React.useState();
-  const [labels, setLabels] = React.useState();
-  const [selectedLabels, setSelectedLabels] = React.useState([]);
-  const [uploadedFiles, setUploadedFiles] = React.useState([]);
+  const [message, setMassage] = useState();
+  const [ticketIssues, setTicketIssues] = useState();
+  const [issueUrls, setIssueUrls] = useState();
+  const [priorities, setPriorities] = useState();
+  const [labels, setLabels] = useState();
+  const [loading, setLoading] = useState(false);
+  const [selectedLabels, setSelectedLabels] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [
     ticketIssueAutoCompleteValues,
     setTicketIssueAutoCompleteValues,
-  ] = React.useState();
+  ] = useState();
   const [
     issueUrlAutoCompleteValues,
     setIssueUrlAutoCompleteValues,
-  ] = React.useState();
+  ] = useState();
   const [
     prioritieAutoCompleteValues,
     setPrioritieAutoCompleteValues,
-  ] = React.useState();
+  ] = useState();
+  const dataLoaded = !!ticketIssues && !!issueUrls && !!priorities && !!labels;
   /* -------------------------------------------------------------------------- */
 
   /* ---------------------------------- refs ---------------------------------- */
@@ -93,8 +102,8 @@ const NewTicket = (props) => {
   };
 
   const submitHandler = (e) => {
-    console.log({ ...model, message: message, labels: selectedLabels });
     (async function () {
+      setLoading(true);
       const res = await TicketsService.post({
         ...model,
         message: message,
@@ -105,6 +114,7 @@ const NewTicket = (props) => {
           ticketId: res.result.id,
         });
       }
+      setLoading(false);
     })();
   };
 
@@ -180,6 +190,11 @@ const NewTicket = (props) => {
   /* -------------------------------------------------------------------------- */
   return (
     <div className={classes.root}>
+      <Fade in={!dataLoaded || loading}>
+        <div>
+          <Loading></Loading>
+        </div>
+      </Fade>
       <Breadcrumb>
         <BreadcrumbTypography linkText={"ایجاد تیکت جدید"} />
       </Breadcrumb>
@@ -187,134 +202,134 @@ const NewTicket = (props) => {
         <strong>ایجاد تیکت جدید</strong>
       </Typography>
       <CustomDivider />
+      <Fade in={dataLoaded} timeout={700}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={5} md={4}>
+            {dataLoaded && (
+              <Paper className={classes.propsCard} elevation={1}>
+                <ValidatorForm onSubmit={submitHandler} id="contact_form">
+                  <TextValidator
+                    //size="small"
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    id="ticketTitle"
+                    label="عنوان تیکت"
+                    name="ticketTitle"
+                    autoComplete="ticketTitle"
+                    autoFocus
+                    validators={["required"]}
+                    errorMessages={["این فیلد اجباری است"]}
+                    autoComplete="off"
+                    onChange={(e) => {
+                      setModel({ ...model, title: e.target.value });
+                    }}
+                    ref={ticketTitleRef}
+                    value={model.title}
+                  />
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={5} md={4}>
-          <Paper className={classes.propsCard} elevation={1}>
-            <ValidatorForm onSubmit={submitHandler} id="contact_form">
-              <TextValidator
-                //size="small"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="ticketTitle"
-                label="عنوان تیکت"
-                name="ticketTitle"
-                autoComplete="ticketTitle"
-                autoFocus
-                validators={["required"]}
-                errorMessages={["این فیلد اجباری است"]}
-                autoComplete="off"
-                onChange={(e) => {
-                  setModel({ ...model, title: e.target.value });
-                }}
-                ref={ticketTitleRef}
-                value={model.title}
-              />
-              {ticketIssues && (
-                <Autocomplete
-                  value={ticketIssueAutoCompleteValues}
-                  onChange={(event, newValue) => {
-                    setTicketIssueAutoCompleteValues(newValue);
-                    setModel({
-                      ...model,
-                      ticketIssueId: newValue.id,
-                    });
-                  }}
-                  className={classes.formMember}
-                  id="ticket-issue-autocomplete"
-                  options={ticketIssues}
-                  getOptionLabel={(option) => option.title}
-                  renderInput={(params) => (
-                    <TextValidator
-                      {...params}
-                      size="small"
-                      label="عنوان تیکت"
-                      fullWidth
-                      variant="outlined"
-                    />
-                  )}
-                />
-              )}
-              {issueUrls && (
-                <Autocomplete
-                  value={issueUrlAutoCompleteValues}
-                  onChange={(event, newValue) => {
-                    setIssueUrlAutoCompleteValues(newValue);
-                    setModel({
-                      ...model,
-                      issueUrlId: newValue.id,
-                    });
-                  }}
-                  className={classes.formMember}
-                  id="issue-url-autocomplete"
-                  options={issueUrls}
-                  getOptionLabel={(option) => option.title}
-                  renderInput={(params) => (
-                    <TextValidator
-                      {...params}
-                      size="small"
-                      label="آدرس سامانه موردنظر"
-                      fullWidth
-                      variant="outlined"
-                    />
-                  )}
-                />
-              )}
-              {priorities && (
-                <Autocomplete
-                  value={prioritieAutoCompleteValues}
-                  onChange={(event, newValue) => {
-                    setPrioritieAutoCompleteValues(newValue);
-                    setModel({
-                      ...model,
-                      priorityId: newValue.id,
-                    });
-                  }}
-                  className={classes.formMember}
-                  id="ticket-priority-autocomplete"
-                  options={priorities}
-                  getOptionLabel={(option) => option.title}
-                  renderInput={(params) => (
-                    <TextValidator
-                      {...params}
-                      size="small"
-                      label="اولویت"
-                      fullWidth
-                      variant="outlined"
-                    />
-                  )}
-                />
-              )}
+                  <Autocomplete
+                    value={ticketIssueAutoCompleteValues}
+                    onChange={(event, newValue) => {
+                      setTicketIssueAutoCompleteValues(newValue);
+                      setModel({
+                        ...model,
+                        ticketIssueId: newValue.id,
+                      });
+                    }}
+                    className={classes.formMember}
+                    id="ticket-issue-autocomplete"
+                    options={ticketIssues}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => (
+                      <TextValidator
+                        {...params}
+                        size="small"
+                        label="عنوان تیکت"
+                        fullWidth
+                        variant="outlined"
+                      />
+                    )}
+                  />
 
-              {/* {
+                  <Autocomplete
+                    value={issueUrlAutoCompleteValues}
+                    onChange={(event, newValue) => {
+                      setIssueUrlAutoCompleteValues(newValue);
+                      setModel({
+                        ...model,
+                        issueUrlId: newValue.id,
+                      });
+                    }}
+                    className={classes.formMember}
+                    id="issue-url-autocomplete"
+                    options={issueUrls}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => (
+                      <TextValidator
+                        {...params}
+                        size="small"
+                        label="آدرس سامانه موردنظر"
+                        fullWidth
+                        variant="outlined"
+                      />
+                    )}
+                  />
+
+                  <Autocomplete
+                    value={prioritieAutoCompleteValues}
+                    onChange={(event, newValue) => {
+                      setPrioritieAutoCompleteValues(newValue);
+                      setModel({
+                        ...model,
+                        priorityId: newValue.id,
+                      });
+                    }}
+                    className={classes.formMember}
+                    id="ticket-priority-autocomplete"
+                    options={priorities}
+                    getOptionLabel={(option) => option.title}
+                    renderInput={(params) => (
+                      <TextValidator
+                        {...params}
+                        size="small"
+                        label="اولویت"
+                        fullWidth
+                        variant="outlined"
+                      />
+                    )}
+                  />
+
+                  {/* {
                 <FormHelperText className={classes.formHelper}>
                   این فیلد اجباری است
                 </FormHelperText>
               } */}
-              {labels && (
-                <LabelPicker
-                  className={classes.label}
-                  labels={labels}
-                  onChange={(e) => {
-                    const labelIds = e.map((l) => l.id);
-                    setSelectedLabels(labelIds);
-                  }}
-                />
-              )}
-              <Uploader
-                onChange={(e) => {
-                  console.log(e);
-                  setUploadedFiles(e);
-                }}
-              />
-            </ValidatorForm>
-          </Paper>
+
+                  <LabelPicker
+                    className={classes.label}
+                    labels={labels}
+                    onChange={(e) => {
+                      const labelIds = e.map((l) => l.id);
+                      setSelectedLabels(labelIds);
+                    }}
+                  />
+
+                  <Uploader
+                    onChange={(e) => {
+                      console.log(e);
+                      setUploadedFiles(e);
+                    }}
+                  />
+                </ValidatorForm>
+              </Paper>
+            )}
+          </Grid>
+          <Grid item xs={12} sm={7} md={8}>
+            <RichTextEditor onChange={onEditorStateChange}></RichTextEditor>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={7} md={8}>
-          <RichTextEditor onChange={onEditorStateChange}></RichTextEditor>
-        </Grid>
-      </Grid>
+      </Fade>
 
       <CustomDivider />
 

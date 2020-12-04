@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import clsx from "clsx";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
+import TuneIcon from "@material-ui/icons/Tune";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import EmailIcon from "@material-ui/icons/Email";
-import MoveToInboxIcon from "@material-ui/icons/MoveToInbox";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import AssessmentIcon from "@material-ui/icons/Assessment";
 import StorefrontIcon from "@material-ui/icons/Storefront";
 import HttpIcon from "@material-ui/icons/Http";
@@ -24,6 +24,7 @@ import Divider from "@material-ui/core/Divider";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AddBoxIcon from "@material-ui/icons/AddBox";
+import { Collapse } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => ({
   createTicketIcon: {
@@ -42,11 +43,31 @@ const useStyle = makeStyles((theme) => ({
   divider: {
     zIndex: 5,
   },
+  collapseListItem: {
+    paddingRight: theme.spacing(0),
+    paddingLeft: theme.spacing(6),
+    "& span": {
+      fontSize: "0.9rem",
+    },
+  },
+  listItemIcon: {
+    minWidth: theme.spacing(4),
+  },
+  rotatedIcon: {
+    transform: "rotate(90deg)",
+  },
 }));
 
 export const MainListItems = () => {
   const history = useHistory();
   const classes = useStyle();
+
+  const [collapse, setCollapse] = useState({
+    myTicketsCollapse: true,
+    systemSetting: false,
+    users: false,
+  });
+
   return (
     <div>
       <Divider className={classes.divider} />
@@ -58,7 +79,7 @@ export const MainListItems = () => {
             history.push("/dashboard/new-ticket");
           }}
         >
-          <ListItemIcon>
+          <ListItemIcon className={classes.listItemIcon}>
             <AddBoxIcon className={classes.createTicketIcon} />
           </ListItemIcon>
           <ListItemText primary="ایجاد تیکت جدید" />
@@ -67,73 +88,99 @@ export const MainListItems = () => {
         <ListItem
           button
           onClick={() => {
-            history.push("/dashboard/view-tickets/OnlyTicketsOfAssignee", {
-              title: "اختصاص یافته به من",
+            setCollapse({
+              myTicketsCollapse: !collapse.myTicketsCollapse,
             });
           }}
         >
-          <ListItemIcon>
+          <ListItemIcon className={classes.listItemIcon}>
             <MailOutlineIcon className={classes.icons} />
           </ListItemIcon>
-          <ListItemText primary="اختصاص یافته به من" />
+          <ListItemText primary="تیکت های من" />
+          <ChevronLeftIcon
+            className={clsx({
+              [classes.rotatedIcon]: collapse.myTicketsCollapse,
+            })}
+          />
         </ListItem>
 
-        <ListItem
-          button
-          onClick={() => {
-            history.push("/dashboard/view-tickets/OnlyTicketsOfGroup", {
-              title: "برای گروه من",
-            });
-          }}
-        >
-          <ListItemIcon>
-            <MailOutlineIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="برای گروه من" />
-        </ListItem>
+        <Collapse in={collapse.myTicketsCollapse} timeout="auto" unmountOnExit>
+          <ListItem
+            className={classes.collapseListItem}
+            button
+            onClick={() => {
+              history.push("/dashboard/view-tickets/OnlyTicketsOfAssignee", {
+                title: "اختصاص یافته به من",
+              });
+            }}
+          >
+            {/* <ListItemIcon>
+              <MailOutlineIcon className={classes.icons} />
+            </ListItemIcon> */}
+            <ListItemText primary="اختصاص یافته به من" />
+          </ListItem>
 
-        <ListItem
-          button
-          onClick={() => {
-            history.push("/dashboard/view-tickets/OnlyOpenedByUser", {
-              title: "باز شده توسط من",
-            });
-          }}
-        >
-          <ListItemIcon>
-            <MailOutlineIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="باز شده توسط من" />
-        </ListItem>
+          <ListItem
+            className={classes.collapseListItem}
+            button
+            onClick={() => {
+              history.push("/dashboard/view-tickets/OnlyTicketsOfGroup", {
+                title: "برای گروه من",
+              });
+            }}
+          >
+            {/* <ListItemIcon>
+              <MailOutlineIcon className={classes.icons} />
+            </ListItemIcon> */}
+            <ListItemText primary="برای گروه من" />
+          </ListItem>
 
-        <ListItem
-          button
-          button
-          onClick={() => {
-            history.push("/dashboard/view-tickets/OnlyClosedByUser", {
-              title: "بسته شده توسط من",
-            });
-          }}
-        >
-          <ListItemIcon>
-            <EmailIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="بسته شده توسط من" />
-        </ListItem>
+          <ListItem
+            className={classes.collapseListItem}
+            button
+            onClick={() => {
+              history.push("/dashboard/view-tickets/OnlyOpenedByUser", {
+                title: "باز شده توسط من",
+              });
+            }}
+          >
+            {/* <ListItemIcon>
+              <MailOutlineIcon className={classes.icons} />
+            </ListItemIcon> */}
+            <ListItemText primary="باز شده توسط من" />
+          </ListItem>
 
-        <ListItem
-          button
-          onClick={() => {
-            history.push("/dashboard/view-tickets/all", {
-              title: "همه تیکت ها",
-            });
-          }}
-        >
-          <ListItemIcon>
-            <MoveToInboxIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="همه تیکت ها" />
-        </ListItem>
+          <ListItem
+            className={classes.collapseListItem}
+            button
+            button
+            onClick={() => {
+              history.push("/dashboard/view-tickets/OnlyClosedByUser", {
+                title: "بسته شده توسط من",
+              });
+            }}
+          >
+            {/* <ListItemIcon>
+              <EmailIcon className={classes.icons} />
+            </ListItemIcon> */}
+            <ListItemText primary="بسته شده توسط من" />
+          </ListItem>
+
+          <ListItem
+            className={classes.collapseListItem}
+            button
+            onClick={() => {
+              history.push("/dashboard/view-tickets/all", {
+                title: "همه تیکت ها",
+              });
+            }}
+          >
+            {/* <ListItemIcon>
+              <MoveToInboxIcon className={classes.icons} />
+            </ListItemIcon> */}
+            <ListItemText primary="همه تیکت ها" />
+          </ListItem>
+        </Collapse>
 
         <ListItem
           button
@@ -141,7 +188,7 @@ export const MainListItems = () => {
             history.push("/dashboard/ticket-report");
           }}
         >
-          <ListItemIcon>
+          <ListItemIcon className={classes.listItemIcon}>
             <AssessmentIcon className={classes.icons} />
           </ListItemIcon>
           <ListItemText primary="گزارش های تیکت" />
@@ -149,83 +196,122 @@ export const MainListItems = () => {
       </List>
       <Divider className={classes.divider} />
       <List>
-        <ListSubheader inset>پیکربندی سیستم تیکتینگ</ListSubheader>
-        <ListItem button>
-          <ListItemIcon>
-            <StorefrontIcon className={classes.icons} />
+        <ListItem
+          button
+          onClick={() => {
+            setCollapse({
+              systemSetting: !collapse.systemSetting,
+            });
+          }}
+        >
+          <ListItemIcon className={classes.listItemIcon}>
+            <TuneIcon className={classes.icons} />
           </ListItemIcon>
-          <ListItemText primary="محصولات" />
+          <ListItemText primary="پیکربندی سیستم" />
+          <ChevronLeftIcon
+            className={clsx({
+              [classes.rotatedIcon]: collapse.systemSetting,
+            })}
+          />
         </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <HttpIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="آدرس سامانه ها" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <PriorityHighIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="اولویت ها" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <SubjectIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="موضوعات تیکت" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <AssignmentTurnedInIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="وضعیت تیکت" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <LabelIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="برچسب ها" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <AccountTreeIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="مکانیزم اختصاص دهی" />
-        </ListItem>
+
+        <Collapse in={collapse.systemSetting} timeout="auto" unmountOnExit>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <StorefrontIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="محصولات" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <HttpIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="آدرس سامانه ها" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <PriorityHighIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="اولویت ها" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <SubjectIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="موضوعات تیکت" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <AssignmentTurnedInIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="وضعیت تیکت" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <LabelIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="برچسب ها" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <AccountTreeIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="مکانیزم اختصاص دهی" />
+          </ListItem>
+        </Collapse>
       </List>
       <Divider className={classes.divider} />
       <List>
-        <ListSubheader inset>کاربران و گروه ها</ListSubheader>
-        <ListItem button>
-          <ListItemIcon>
-            <PersonIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="کاربران" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
+        <ListItem
+          button
+          onClick={() => {
+            setCollapse({
+              users: !collapse.users,
+            });
+          }}
+        >
+          <ListItemIcon className={classes.listItemIcon}>
             <GroupIcon className={classes.icons} />
           </ListItemIcon>
-          <ListItemText primary="گروه ها" />
+          <ListItemText primary="کاربران و گروه ها" />
+          <ChevronLeftIcon
+            className={clsx({
+              [classes.rotatedIcon]: collapse.users,
+            })}
+          />
         </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <AssignmentIndIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="انواع گروه ها" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <VerifiedUserIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="سمت های سازمانی" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <ShoppingBasketIcon className={classes.icons} />
-          </ListItemIcon>
-          <ListItemText primary="مشتریان" />
-        </ListItem>
+        <Collapse in={collapse.users} timeout="auto" unmountOnExit>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <PersonIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="کاربران" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <GroupIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="گروه ها" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <AssignmentIndIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="انواع گروه ها" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <VerifiedUserIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="سمت های سازمانی" />
+          </ListItem>
+          <ListItem button className={classes.collapseListItem}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <ShoppingBasketIcon className={classes.icons} />
+            </ListItemIcon>
+            <ListItemText primary="مشتریان" />
+          </ListItem>
+        </Collapse>
       </List>
     </div>
   );
