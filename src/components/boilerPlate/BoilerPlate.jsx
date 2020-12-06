@@ -1,6 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
+import ConversationService from "./../../api/conversation/conversations";
+import { Container } from "@material-ui/core/Container";
+import { Fade, Grid, Paper } from "@material-ui/core";
+import Loading from "./../../components/progress/Loading";
 
 const useStyles = makeStyles((theme) => ({}));
 
@@ -10,13 +14,6 @@ const Component = (props) => {
   /* -------------------------------------------------------------------------- */
 
   /* -------------------------------- dataFetch ------------------------------- */
-  /* -------------------------------------------------------------------------- */
-
-  /* --------------------------------- states --------------------------------- */
-  const [state, setState] = useState();
-  /* -------------------------------------------------------------------------- */
-
-  /* -------------------------------- functions ------------------------------- */
   const getAll = async () => {
     // const res = await TicketsService.getAll({
     // });
@@ -26,15 +23,37 @@ const Component = (props) => {
   };
   /* -------------------------------------------------------------------------- */
 
+  /* --------------------------------- states --------------------------------- */
+  const [data, setData] = useState();
+  const [loading, setLoading] = React.useState(false);
+  /* -------------------------------------------------------------------------- */
+
+  /* -------------------------------- functions ------------------------------- */
+
+  /* -------------------------------------------------------------------------- */
+
   /* ---------------------------------- refs ---------------------------------- */
   /* -------------------------------------------------------------------------- */
 
   /* ---------------------------------- hooks --------------------------------- */
   useEffect(() => {}, []);
   /* -------------------------------------------------------------------------- */
-  return <div></div>;
+  return (
+    <div>
+      <Fade in={loading}>
+        <div>
+          <Loading></Loading>
+        </div>
+      </Fade>
+      <Grid container justify="center">
+        <Grid item xs={12}>
+          <Paper elevation={4} className={classes.paper}></Paper>
+        </Grid>
+      </Grid>
+    </div>
+  );
 };
 
-Component.PropTypes = {};
+Component.propTypes = {};
 
 export default Component;

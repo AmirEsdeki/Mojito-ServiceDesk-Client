@@ -62,7 +62,7 @@ export default function ViewTickets(props) {
     if (res.result && res.result.items) {
       const data = res.result.items;
       var parsedDate = data.map((d) => ({
-        key: d.id,
+        id: d.id,
         created: d.created,
         title: d.title,
         lastMessage: extractTextContent(d.lastMessage, true),
@@ -114,7 +114,7 @@ export default function ViewTickets(props) {
         </div>
       </Fade>
       <Breadcrumb>
-        <BreadcrumbTypography linkText={"تیکت های باز من"} />
+        <BreadcrumbTypography linkText={title} />
       </Breadcrumb>
       <Typography>
         <strong>{title}</strong>
@@ -157,7 +157,12 @@ export default function ViewTickets(props) {
               }}
             >
               <div>
-                <Ticket key={ticket.id} {...ticket} />
+                <Ticket
+                  redirectedFrom={whichTicketsToShowWildCard}
+                  redirectedFromTitle={title}
+                  key={ticket.id}
+                  {...ticket}
+                />
               </div>
             </Zoom>
           );

@@ -15,6 +15,8 @@ import { withTheme } from "@material-ui/core/styles";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import PropTypes from "prop-types";
 import dateDiff from "../../helpers/dateDiff";
+import { useHistory } from "react-router-dom";
+import cutLongString from "./../../helpers/cutLongString";
 
 const useStyles = makeStyles((theme) => ({
   mainBox: {
@@ -107,6 +109,7 @@ const Ticket = (props) => {
   /* -------------------------------- variables ------------------------------- */
   const classes = useStyles();
   const theme = useTheme();
+  const history = useHistory();
   /* -------------------------------------------------------------------------- */
 
   /* -------------------------------- functions ------------------------------- */
@@ -181,10 +184,20 @@ const Ticket = (props) => {
             className={classes.title}
           >
             <Grid item>
-              <Link component={Typography} style={{ cursor: "pointer" }}>
-                {props.title.length > 70
-                  ? props.title.substring(0, 67) + "..."
-                  : props.title}
+              <Link
+                component={Typography}
+                style={{ cursor: "pointer" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  history.push(`/dashboard/view-conversations/${props.id}`, {
+                    identifier: props.identifier,
+                    redirectedFrom: props.redirectedFrom,
+                    redirectedFromTitle: props.redirectedFromTitle,
+                    ticketTitle: props.title,
+                  });
+                }}
+              >
+                {cutLongString(props.title, 70)}
               </Link>
             </Grid>
             <Grid item>
@@ -199,9 +212,7 @@ const Ticket = (props) => {
           </Grid>
           <Grid item xs={12} className={classes.caption}>
             <Typography color="textSecondary" variant="caption">
-              {props.lastMessage.length > 70
-                ? props.lastMessage.substring(0, 67) + "..."
-                : props.lastMessage}
+              {cutLongString(props.lastMessage, 70)}
             </Typography>
           </Grid>
         </Grid>
@@ -382,6 +393,7 @@ const Ticket = (props) => {
 };
 
 Ticket.propTypes = {
+  id: PropTypes.string,
   isClosed: PropTypes.bool,
   conversationCount: PropTypes.number,
   attachmentCount: PropTypes.number,
@@ -400,6 +412,8 @@ Ticket.propTypes = {
   closedBy: PropTypes.string,
   closedByImage: PropTypes.string,
   created: PropTypes.string,
+  redirectedFrom: PropTypes.string,
+  redirectedFromTitle: PropTypes.string,
 };
 
 export default withTheme(Ticket);

@@ -24,6 +24,7 @@ import PrivateRoute from "../../components/route/PrivateRoute";
 import NewTicket from "../newTicket/NewTicket";
 import Avatar from "@material-ui/core/Avatar";
 import ViewTickets from "./../viewTickets/ViewTickets";
+import ViewConversation from "./../viewConversation/ViewConversation";
 
 const drawerWidth = 240;
 
@@ -240,6 +241,11 @@ export default function DashboardStructure() {
           <PrivateRoute
             path="/dashboard/view-tickets/:which"
             component={ViewTickets}
+          />
+
+          <PrivateRoute
+            path="/dashboard/view-conversations/:ticketId"
+            component={ViewConversation}
           />
         </Container>
       </main>
