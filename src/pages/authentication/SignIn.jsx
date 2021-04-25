@@ -22,11 +22,11 @@ import { useHistory } from "react-router-dom";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {"تمامی حقوق مالکیت معنوی این وب‌سایت برای شرکت "}{" "}
-      <Link color="inherit" href="http://faranam.net/">
-        <span style={{ color: "#376374" }}>فرانام</span>
+      {"نوشته شده با ری اکت دوست داشتنی توسط "}{" "}
+      <Link color="inherit" href="http://Bleu.ir/">
+        <span style={{ color: "#376374" }}>من</span>
       </Link>{" "}
-      {"محفوظ است"} {new Date().getFullYear()}
+      {". شرکت نرم افزاری موهیتو"} {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -150,7 +150,7 @@ export default function SignInSide() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            <strong>پورتال جامع فرانام</strong>
+            <strong>نرم افزار جامع تیکتینگ موهیتو</strong>
           </Typography>
           <br />
           <br />

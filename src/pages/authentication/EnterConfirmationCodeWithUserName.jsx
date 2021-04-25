@@ -126,7 +126,7 @@ function EnterConfirmationCodeWithUserName(props) {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            <strong>پورتال جامع فرانام</strong>
+            <strong>پورتال جامع موهیتو</strong>
           </Typography>
           <ValidatorForm
             onSubmit={confirmationClickHandler}

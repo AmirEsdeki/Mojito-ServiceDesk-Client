@@ -188,7 +188,7 @@ export default function DashboardStructure() {
             noWrap
             className={classes.title}
           >
-            {!isMobile && "میز کار فرانام"}
+            {!isMobile && "میز کار موهیتو"}
           </Typography>
 
           <IconButton color="inherit">
